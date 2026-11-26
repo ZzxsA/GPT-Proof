@@ -1,0 +1,27 @@
+name: Search and check graph counterexamples
+on: [push, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  search:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replay cycle search
+        run: |
+          python3 -m unittest discover -s counterexamples -p 'test_*.py'
+          python3 counterexamples/search.py --start 4 --count 46 --output "$RUNNER_TEMP/cycles"
+      - name: Install pinned Lean
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --yes elan
+          elan toolchain install "$(cat lean-toolchain)"
+      - name: Check cycle module and the generated proofs
+        run: |
+          export LEAN_PATH="$RUNNER_TEMP/cycles"
+          (cd counterexamples && lean -o "$LEAN_PATH/CycleCertificate.olean" CycleCertificate.lean)
+          cd "$LEAN_PATH"
+          for f in Witness_*.lean; do
+            cmp "$f" "$GITHUB_WORKSPACE/counterexamples/examples/$f"
+            lean "$f"
+          done

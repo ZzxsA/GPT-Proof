@@ -1,0 +1,93 @@
+{
+  "source": {
+    "project": "AutoGraphForge",
+    "author": "Ján Pastorek",
+    "paper": "AutoGraphForge: Towards Automated Graph Theory Discovery",
+    "paper_url": "https://arxiv.org/abs/2609.03478",
+    "revision": "4d1a8afc99447cacd2328cca20e47b6493e8dbc5",
+    "rank_file": "results/audit_top_normalised.json",
+    "record_file": "results/shard_4/cegis_results.json",
+    "provenance": "Each entry matches the generator record to all_ranked in the normalized audit by the exact statement. The rank is rank_all. These three candidates appear in the companion data.",
+    "coefficient_convention": "The proposed inequality is lhs <= a * rhs_invariant + b. The coefficient b is the additive constant.",
+    "predicate_definitions": {
+      "nontrivial": "At least two vertices.",
+      "claw_free": "No induced copy of the four-vertex star K_1,3.",
+      "regular": "All vertices have the same degree.",
+      "subcubic": "Every degree is at most three.",
+      "eulerian": "The graph is connected and every degree is even."
+    },
+    "predicate_sources": [
+      "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/lean_project/LeanProject/GraphInvariantsComputable.lean#L270-L301",
+      "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/lean_project/LeanProject/GraphInvariantsComputable.lean#L347-L359"
+    ]
+  },
+  "candidates": [
+    {
+      "id": "c5b13d43",
+      "rank": 1656,
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (regular)) ⇒ vertex_clique_cover_number ≤ ((3 · burning_number) + -4)",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "regular"
+      ],
+      "lhs": "vertex_clique_cover_number",
+      "rhs_invariant": "burning_number",
+      "a": 3,
+      "b": -4,
+      "status": "proposed",
+      "audit_bucket": "promising:class",
+      "audit_lines": [
+        38731,
+        38753
+      ],
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/audit_top_normalised.json#L38731-L38753",
+      "record_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/shard_4/cegis_results.json#L255709-L255712",
+      "readable_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L1606"
+    },
+    {
+      "id": "31b3af5f",
+      "rank": 2256,
+      "statement": "((nontrivial) ∧ (subcubic)) ⇒ vertex_clique_cover_number ≤ ((3 · burning_number) + -2)",
+      "hypotheses": [
+        "nontrivial",
+        "subcubic"
+      ],
+      "lhs": "vertex_clique_cover_number",
+      "rhs_invariant": "burning_number",
+      "a": 3,
+      "b": -2,
+      "status": "proposed",
+      "audit_bucket": "promising:class",
+      "audit_lines": [
+        52314,
+        52334
+      ],
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/audit_top_normalised.json#L52314-L52334",
+      "record_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/shard_4/cegis_results.json#L368166-L368169",
+      "readable_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L2194"
+    },
+    {
+      "id": "a1136330",
+      "rank": 2618,
+      "statement": "((nontrivial) ∧ (eulerian)) ⇒ vertex_clique_cover_number ≤ ((2 · burning_number) + 6)",
+      "hypotheses": [
+        "nontrivial",
+        "eulerian"
+      ],
+      "lhs": "vertex_clique_cover_number",
+      "rhs_invariant": "burning_number",
+      "a": 2,
+      "b": 6,
+      "status": "proposed",
+      "audit_bucket": "promising:class",
+      "audit_lines": [
+        60505,
+        60525
+      ],
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/audit_top_normalised.json#L60505-L60525",
+      "record_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/shard_4/cegis_results.json#L437378-L437381",
+      "readable_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L2553"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+name: Search and check graph counterexamples
+
+on:
+  schedule:
+    - cron: '23 4 * * *'
+  push:
+    paths:
+      - '.github/workflows/counterexamples.yml'
+      - 'counterexamples/**'
+      - 'lean-toolchain'
+  workflow_dispatch:
+    inputs:
+      start:
+        description: 'First cycle order (4 through 96)'
+        type: string
+        default: '4'
+      count:
+        description: 'Number of cycle orders, ending at or before 96'
+        type: string
+        default: '46'
+      seed:
+        description: 'Nonnegative integer seed for the 200-graph degree search'
+        type: string
+        default: '20261126'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  search:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Prepare directories
+        run: |
+          mkdir -p "$RUNNER_TEMP/counterexample-results/logs" "$RUNNER_TEMP/counterexample-oleans"
+          echo "RESULTS=$RUNNER_TEMP/counterexample-results" >> "$GITHUB_ENV"
+          echo "LEAN_PATH=$RUNNER_TEMP/counterexample-oleans" >> "$GITHUB_ENV"
+          echo "ELAN_TOOLCHAIN=$(cat lean-toolchain)" >> "$GITHUB_ENV"
+
+      - name: Select a reproducible search window and seed
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_START: ${{ inputs.start }}
+          INPUT_COUNT: ${{ inputs.count }}
+          INPUT_SEED: ${{ inputs.seed }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then
+            # Retries keep the original UTC date, even if the retry happens days later.
+            RUN_CREATED=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" --jq .created_at)
+            export RUN_CREATED
+          fi
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import date
+          from pathlib import Path
+
+          env = os.environ
+          event = env['GITHUB_EVENT_NAME']
+          first_day = date(2026, 11, 27)
+          max_order = 96
+          if event == 'schedule':
+              day = date.fromisoformat(env['RUN_CREATED'][:10])
+              # One cycle order per UTC date. A missed date can be replayed via dispatch.
+              order = 50 + (day - first_day).days
+              active = 50 <= order <= max_order
+              start, count = (order, 1) if active else (4, 0)
+              reason = ('scheduled' if active else
+                        'campaign has ended' if order > max_order else 'campaign has not started')
+              seed = int(env['GITHUB_RUN_ID'])
+          else:
+              start = int(env.get('INPUT_START') or 4)
+              count = int(env.get('INPUT_COUNT') or 46)
+              seed = int(env.get('INPUT_SEED') or 20261126)
+              if not (4 <= start <= max_order and 1 <= count <= max_order - start + 1):
+                  raise SystemExit('Choose a nonempty cycle window contained in [4, 96].')
+              if not 0 <= seed < 2**63:
+                  raise SystemExit('Choose a seed between 0 and 2^63-1.')
+              reason = event
+
+          plan = dict(event=event, run_id=env['GITHUB_RUN_ID'], commit=env['GITHUB_SHA'],
+                      cycle_start=start, cycle_count=count, cycle_status=reason,
+                      degree_seed=seed, degree_graphs=200)
+          path = Path(env['RESULTS']) / 'plan.json'
+          path.write_text(json.dumps(plan, indent=2) + '\n', encoding='utf-8')
+          print(path.read_text(encoding='utf-8'))
+          with open(env['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              print(f'start={start}\ncount={count}\nseed={seed}', file=output)
+          PY
+
+      - name: Run Python fixture tests
+        run: |
+          python3 -m unittest discover -s counterexamples -p 'test_*.py' -v 2>&1 | tee "$RESULTS/logs/tests.log"
+
+      - name: Run both searches and generate a fixed C23 regression certificate
+        env:
+          START: ${{ steps.plan.outputs.start }}
+          COUNT: ${{ steps.plan.outputs.count }}
+          SEED: ${{ steps.plan.outputs.seed }}
+        run: |
+          python3 counterexamples/search.py --start "$START" --count "$COUNT" --output "$RESULTS/cycles" 2>&1 | tee "$RESULTS/logs/cycles.log"
+          python3 counterexamples/degree_search.py --seed "$SEED" --graphs 200 --output "$RESULTS/degree" 2>&1 | tee "$RESULTS/logs/degree.log"
+          python3 counterexamples/search.py --start 23 --count 1 --output "$RESULTS/fixture" 2>&1 | tee "$RESULTS/logs/fixture.log"
+          test -s "$RESULTS/fixture/Witness_c5b13d43.lean"
+          cp counterexamples/*catalog*.json "$RESULTS/"
+
+      - name: Install the pinned Lean toolchain
+        run: |
+          sudo apt-get update -qq 2>&1 | tee "$RESULTS/logs/toolchain.log"
+          sudo apt-get install --yes elan 2>&1 | tee -a "$RESULTS/logs/toolchain.log"
+          elan toolchain install "$ELAN_TOOLCHAIN" 2>&1 | tee -a "$RESULTS/logs/toolchain.log"
+          lean --version 2>&1 | tee -a "$RESULTS/logs/toolchain.log"
+
+      - name: Typecheck both certificate modules and every generated proof
+        run: |
+          cd counterexamples
+          for module in CycleCertificate DegreeCertificate; do
+            cp "$module.lean" "$RESULTS/"
+            lean -o "$LEAN_PATH/$module.olean" "$module.lean" 2>&1 | tee "$RESULTS/logs/$module.log"
+          done
+          test -s "$RESULTS/degree/DegreeWitnesses.lean"
+          shopt -s nullglob
+          for file in "$RESULTS"/fixture/Witness_*.lean "$RESULTS"/cycles/Witness_*.lean "$RESULTS"/degree/DegreeWitnesses.lean; do
+            dir=$(dirname "$file")
+            name=$(basename "$file")
+            echo "Checking $(basename "$dir")/$name" | tee -a "$RESULTS/logs/proofs.log"
+            (cd "$dir" && lean "$name") 2>&1 | tee -a "$RESULTS/logs/proofs.log"
+          done
+          echo 'All generated proofs passed Lean.' | tee -a "$RESULTS/logs/proofs.log" >> "$GITHUB_STEP_SUMMARY"
+          echo 'The cycle window and degree seed are recorded in plan.json.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve sources, certificates, search results and logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: counterexamples-${{ github.run_id }}-${{ github.run_attempt }}-${{ job.status }}
+          path: ${{ runner.temp }}/counterexample-results/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,265 @@
+{
+  "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt",
+  "git_blob_sha": "11d0dd0f999791efeab05b043d805fcf3bd33e99",
+  "candidates": [
+    {
+      "id": "agf-4d1a8afc-L171",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L171",
+      "statement": "(nontrivial) ⇒ clique_number ≤ (vertex_cover_number + 1)",
+      "hypotheses": [
+        "nontrivial"
+      ],
+      "linear": {
+        "clique_number": -1,
+        "constant": 1,
+        "vertex_cover_number": 1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L179",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L179",
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (subcubic)) ⇒ maximum_degree ≤ clique_number",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "subcubic"
+      ],
+      "linear": {
+        "clique_number": 1,
+        "maximum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L224",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L224",
+      "statement": "((nontrivial) ∧ (eulerian)) ⇒ 2 ≤ minimum_degree",
+      "hypotheses": [
+        "nontrivial",
+        "eulerian"
+      ],
+      "linear": {
+        "constant": -2,
+        "minimum_degree": 1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L237",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L237",
+      "statement": "(((nontrivial) ∧ (subcubic)) ∧ (triangle_free)) ⇒ maximum_degree ≤ ((3 · clique_number) + -3)",
+      "hypotheses": [
+        "nontrivial",
+        "subcubic",
+        "triangle_free"
+      ],
+      "linear": {
+        "clique_number": 3,
+        "constant": -3,
+        "maximum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L276",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L276",
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (triangle_free)) ⇒ maximum_degree ≤ ((2 · clique_number) + -2)",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "triangle_free"
+      ],
+      "linear": {
+        "clique_number": 2,
+        "constant": -2,
+        "maximum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L294",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L294",
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (triangle_free)) ⇒ maximum_degree ≤ 2",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "triangle_free"
+      ],
+      "linear": {
+        "constant": 2,
+        "maximum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L426",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L426",
+      "statement": "(((nontrivial) ∧ (regular)) ∧ (subcubic)) ⇒ minimum_degree ≤ 3",
+      "hypotheses": [
+        "nontrivial",
+        "regular",
+        "subcubic"
+      ],
+      "linear": {
+        "constant": 3,
+        "minimum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L527",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L527",
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (triangle_free)) ⇒ size ≤ (2 · vertex_cover_number)",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "triangle_free"
+      ],
+      "linear": {
+        "size": -1,
+        "vertex_cover_number": 2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L631",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L631",
+      "statement": "(nontrivial) ⇒ maximum_degree ≤ size",
+      "hypotheses": [
+        "nontrivial"
+      ],
+      "linear": {
+        "maximum_degree": -1,
+        "size": 1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L714",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L714",
+      "statement": "((nontrivial) ∧ (connected)) ⇒ vertex_cover_number ≤ (((1/2) · size) + (1/2))",
+      "hypotheses": [
+        "nontrivial",
+        "connected"
+      ],
+      "linear": {
+        "constant": 1,
+        "size": 1,
+        "vertex_cover_number": -2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L749",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L749",
+      "statement": "((nontrivial) ∧ (subcubic)) ⇒ size ≤ (3 · vertex_cover_number)",
+      "hypotheses": [
+        "nontrivial",
+        "subcubic"
+      ],
+      "linear": {
+        "size": -1,
+        "vertex_cover_number": 3
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L781",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L781",
+      "statement": "(nontrivial) ⇒ vertex_cover_number ≤ size",
+      "hypotheses": [
+        "nontrivial"
+      ],
+      "linear": {
+        "size": 1,
+        "vertex_cover_number": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L872",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L872",
+      "statement": "((nontrivial) ∧ (cubic)) ⇒ maximum_degree ≤ ((3/2) · clique_number)",
+      "hypotheses": [
+        "nontrivial",
+        "cubic"
+      ],
+      "linear": {
+        "clique_number": 3,
+        "maximum_degree": -2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L873",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L873",
+      "statement": "(((nontrivial) ∧ (cubic)) ∧ (triangle_free)) ⇒ ((3/2) · clique_number) ≤ maximum_degree",
+      "hypotheses": [
+        "nontrivial",
+        "cubic",
+        "triangle_free"
+      ],
+      "linear": {
+        "clique_number": -3,
+        "maximum_degree": 2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L874",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L874",
+      "statement": "((nontrivial) ∧ (cubic)) ⇒ minimum_degree ≤ ((3/2) · clique_number)",
+      "hypotheses": [
+        "nontrivial",
+        "cubic"
+      ],
+      "linear": {
+        "clique_number": 3,
+        "minimum_degree": -2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L875",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L875",
+      "statement": "(((nontrivial) ∧ (cubic)) ∧ (triangle_free)) ⇒ ((3/2) · clique_number) ≤ minimum_degree",
+      "hypotheses": [
+        "nontrivial",
+        "cubic",
+        "triangle_free"
+      ],
+      "linear": {
+        "clique_number": -3,
+        "minimum_degree": 2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L1075",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L1075",
+      "statement": "(((nontrivial) ∧ (eulerian)) ∧ (subcubic)) ⇒ minimum_degree ≤ clique_number",
+      "hypotheses": [
+        "nontrivial",
+        "eulerian",
+        "subcubic"
+      ],
+      "linear": {
+        "clique_number": 1,
+        "minimum_degree": -1
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L1505",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L1505",
+      "statement": "(((nontrivial) ∧ (eulerian)) ∧ (subcubic)) ⇒ size ≤ (2 · vertex_cover_number)",
+      "hypotheses": [
+        "nontrivial",
+        "eulerian",
+        "subcubic"
+      ],
+      "linear": {
+        "size": -1,
+        "vertex_cover_number": 2
+      }
+    },
+    {
+      "id": "agf-4d1a8afc-L1861",
+      "source_url": "https://github.com/JanPastorek/AutoGraphForge/blob/4d1a8afc99447cacd2328cca20e47b6493e8dbc5/results/survivors_by_touch_normalised.txt#L1861",
+      "statement": "(((nontrivial) ∧ (claw_free)) ∧ (cubic)) ⇒ minimum_degree ≤ clique_number",
+      "hypotheses": [
+        "nontrivial",
+        "claw_free",
+        "cubic"
+      ],
+      "linear": {
+        "clique_number": 1,
+        "minimum_degree": -1
+      }
+    }
+  ]
+}

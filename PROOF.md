@@ -1,6 +1,6 @@
 # The largest prime factor of the Harkness period
 
-**Mo Li (ZzxsA) and ChatGPT (OpenAI)**
+**ZzxsA and ChatGPT (OpenAI)**
 
 Let $n\ge5$ be prime. For $m\ge1$ put $D_n(m)=(m+1)^n-m^n$, and set $b_n(m)=1$ if $D_n(m)$ and $D_n(m+1)$ are coprime, or $0$ otherwise. Since $\gcd(A,B)=\gcd(A,B-A)$, this agrees with the original definition using first and second differences. Let $a(n)$ be the least positive period of $b_n$. The argument below also establishes its existence. [Harkness, OEIS A353890](https://oeis.org/A353890)
 

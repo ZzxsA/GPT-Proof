@@ -1,6 +1,6 @@
 # GPT-Proof
 
-**Mo Li (ZzxsA) and ChatGPT (OpenAI)**
+**ZzxsA and ChatGPT (OpenAI)**
 
 ## The Harkness period conjecture
 

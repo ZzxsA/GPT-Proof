@@ -99,8 +99,8 @@ theorem tour_closes {n : Nat} (hn : 4 ≤ n) : nextVertex n (n-1) = 0 := by
 
 private theorem tour_covers {n u v : Nat} (h : Adj n u v) : ∃ i, TourEdge n i u v := by
   obtain ⟨hu, hv, h | h | h | h⟩ := h
-  · exact ⟨u, hu, Or.inl ⟨rfl, by simp [nextVertex, show u+1<n by omega, h]⟩⟩
-  · exact ⟨v, hv, Or.inr ⟨rfl, by simp [nextVertex, show v+1<n by omega, h]⟩⟩
+  · exact ⟨u, hu, Or.inl ⟨rfl, by rw [nextVertex, if_pos (show u+1<n by omega), h]⟩⟩
+  · exact ⟨v, hv, Or.inr ⟨rfl, by rw [nextVertex, if_pos (show v+1<n by omega), h]⟩⟩
   · exact ⟨v, hv, Or.inr ⟨rfl, by simp [nextVertex, show ¬v+1<n by omega, h.1]⟩⟩
   · exact ⟨u, hu, Or.inl ⟨rfl, by simp [nextVertex, show ¬u+1<n by omega, h.1]⟩⟩
 

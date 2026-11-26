@@ -2,6 +2,10 @@
 
 **ZzxsA and ChatGPT (OpenAI)**
 
+## Counterexample search
+
+The daily graph search checks published conjecture statements against explicit finite graphs and emits Lean certificates for hits. The first three witnesses are cycles on 23, 33 and 41 vertices. Each refutes a different numbered proposal from AutoGraphForge. The repository records the original hypotheses and the evidence for each failure. [Statements, witnesses and reproduction commands](counterexamples/README.md) · [Search runs](https://github.com/ZzxsA/GPT-Proof/actions/workflows/counterexamples.yml)
+
 ## The Harkness period conjecture
 
 For a prime exponent $n\ge 5$, consider the binary sequence that records whether consecutive differences of $n$th powers are coprime. Write $a(n)$ for its least positive period. Samuel Harkness conjectured that the largest prime factor of $a(n)$ equals $J_n=(2^n+1)/3$. [Original conjecture, OEIS A353890](https://oeis.org/A353890)

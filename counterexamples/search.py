@@ -142,7 +142,7 @@ def render_lean(witness):
         "  refine ⟨CycleCertificate.cycle_graph_hypotheses (by decide), ?_⟩\n"
         "  obtain ⟨burning, cover, hb, hc, hgap⟩ :=\n"
         f"    CycleCertificate.exists_optima_violation {n} {sources} (fun k => {expression})\n"
-        f"      (by decide) burns_{key} (by decide) (by intro x y hxy; omega)\n"
+        f"      (by decide) burns_{key} (by decide) (by intro x y hxy; change {a} * x {operator} {abs(b)} ≤ {a} * y {operator} {abs(b)}; omega)\n"
         "  refine ⟨burning, cover, hb, hc, ?_⟩\n"
         f"  change {a} * burning {operator} {abs(b)} < cover at hgap\n"
         "  omega\n"

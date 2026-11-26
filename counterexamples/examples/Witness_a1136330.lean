@@ -22,7 +22,7 @@ theorem violates_a1136330 :
   refine ⟨CycleCertificate.cycle_graph_hypotheses (by decide), ?_⟩
   obtain ⟨burning, cover, hb, hc, hgap⟩ :=
     CycleCertificate.exists_optima_violation 41 [6, 18, 27, 33, 37, 39, 40] (fun k => 2 * k + 6)
-      (by decide) burns_a1136330 (by decide) (by intro x y hxy; omega)
+      (by decide) burns_a1136330 (by decide) (by intro x y hxy; change 2 * x + 6 ≤ 2 * y + 6; omega)
   refine ⟨burning, cover, hb, hc, ?_⟩
   change 2 * burning + 6 < cover at hgap
   omega

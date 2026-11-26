@@ -18,6 +18,7 @@ jobs:
           elan toolchain install "$(cat lean-toolchain)"
       - name: Check cycle module and the generated proofs
         run: |
+          export ELAN_TOOLCHAIN="$(cat lean-toolchain)"
           export LEAN_PATH="$RUNNER_TEMP/cycles"
           (cd counterexamples && lean -o "$LEAN_PATH/CycleCertificate.olean" CycleCertificate.lean)
           cd "$LEAN_PATH"

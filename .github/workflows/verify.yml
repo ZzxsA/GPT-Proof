@@ -160,7 +160,7 @@ jobs:
           git clone -q --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/research-mathlib"
           cd "$RUNNER_TEMP/research-mathlib"
           test "$(git rev-parse HEAD)" = c44e0c8ee63ca166450922a373c7409c5d26b00b
-          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean | sort -u)
+          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289261/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289245/*.lean | sort -u)
           lake exe cache get "${imports[@]}"
           mkdir -p "$RUNNER_TEMP/proof-olean"
       - name: Verify clark-dispersion
@@ -183,4 +183,24 @@ jobs:
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
             lean --root="$folder" -o "$compiled/LiuSeven.olean" "$folder/LiuSeven.lean"
+          '
+      - name: Verify kimberling-a289261
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/kimberling-a289261"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            lean --root="$folder" -o "$compiled/Kimberling.olean" "$folder/Kimberling.lean"
+          '
+      - name: Verify kimberling-a289245
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/kimberling-a289245"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            lean --root="$folder" -o "$compiled/ShiftedFloor.olean" "$folder/ShiftedFloor.lean"
           '

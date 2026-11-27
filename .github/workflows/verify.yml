@@ -71,3 +71,15 @@ jobs:
           mkdir -p "$LEAN_PATH"
           lean -o "$LEAN_PATH/Obstructions.olean" Obstructions.lean
           lean Classification.lean
+      - name: Verify Kimberling's reciprocal floor series
+        if: ${{ !cancelled() }}
+        working-directory: proofs/kimberling-a289261
+        run: |
+          python3 verify_kimberling.py
+          lean Kimberling.lean
+      - name: Verify the independence and neighborhood bounds of the prism
+        if: ${{ !cancelled() }}
+        working-directory: proofs/larson-van-cleemput-periphery
+        run: |
+          mkdir -p "$RUNNER_TEMP/rook-olean"
+          lean -o "$RUNNER_TEMP/rook-olean/RookTenIndependent.olean" RookTenIndependent.lean

@@ -135,7 +135,11 @@ jobs:
           lake env bash -eu -c '
             project_lib="$RUNNER_TEMP/kimberling-olean"
             mkdir -p "$project_lib"
-            export LEAN_PATH="$project_lib:$LEAN_PATH"
+            IFS=: read -ra libs <<< "$LEAN_PATH"
+            export LEAN_PATH="$project_lib"
+            for lib in "${libs[@]}"; do
+              LEAN_PATH="$LEAN_PATH:$(realpath -m "$lib")"
+            done
             cd "$GITHUB_WORKSPACE/proofs/kimberling-a289261"
             lean -o "$project_lib/Kimberling.olean" Kimberling.lean
             cd ../kimberling-a078140

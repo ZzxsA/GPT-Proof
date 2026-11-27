@@ -48,8 +48,7 @@ jobs:
         run: |
           python3 verify_seed.py
           mkdir -p "$RUNNER_TEMP/distinct-sums"
-          ulimit -s 262144
-          lean -s 262144 -o "$RUNNER_TEMP/distinct-sums/SeedFive.olean" SeedFive.lean
+          lean -o "$RUNNER_TEMP/distinct-sums/SeedFive.olean" SeedFive.lean
       - name: Verify the complete classification for base five
         if: ${{ !cancelled() }}
         working-directory: proofs/sun-a362861-1i

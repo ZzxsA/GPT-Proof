@@ -6,6 +6,7 @@ namespace SunFive
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
+set_option exponentiation.threshold 4096
 
 def halfTerm (a j : Nat) : Nat := (5^a + 5^j) / 2
 
@@ -72,7 +73,9 @@ private theorem marked_iff (xs : List Nat) (n : Nat) :
   induction xs with
   | nil => simp [marked]
   | cons x xs ih =>
-    simp [marked, Nat.testBit_or, Nat.testBit_two_pow, ih, eq_comm]
+    simp only [marked, Nat.testBit_or, Nat.testBit_two_pow, Bool.or_eq_true_iff,
+      decide_eq_true_eq, ih, List.mem_cons]
+    exact or_congr eq_comm Iff.rfl
 
 /-- Check one 2088-bit equality. The low bits absent from the reachable
 set are exactly the entries of the source's exception list. -/

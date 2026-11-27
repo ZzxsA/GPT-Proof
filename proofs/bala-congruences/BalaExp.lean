@@ -23,7 +23,6 @@ theorem factorial_coeff_exp (F G : PowerSeries ℤ) (n : ℕ) :
   apply Finset.sum_congr rfl
   intro j hj
   have h : j ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hj)
-  simp only [Nat.add_sub_cancel]
   have eqp : F * (X * G^n)^(n-j) = (F * G^(n*(n-j))) * X^(n-j) := by
     rw [mul_pow, pow_mul]
     ac_rfl
@@ -32,8 +31,7 @@ theorem factorial_coeff_exp (F G : PowerSeries ℤ) (n : ℕ) :
     exact_mod_cast Nat.factorial_mul_descFactorial h
   have hz : ((n-j).factorial : ℚ) ≠ 0 := by exact_mod_cast Nat.factorial_ne_zero _
   rw [← he]
-  field_simp
-  <;> ring
+  field_simp [hz] <;> ring
 
 /-- The coefficient of the rational exponential is integral, and its integer
 representative obeys Bala's congruence. -/

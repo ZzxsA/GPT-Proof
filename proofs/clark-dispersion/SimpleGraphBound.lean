@@ -1,4 +1,5 @@
 import Moments
+import Star
 import Mathlib.Combinatorics.SimpleGraph.AdjMatrix
 
 namespace Clark
@@ -18,7 +19,10 @@ theorem simpleGraph_fixed_order (G : SimpleGraph V) [DecidableRel G.Adj]
   let A := G.adjMatrix ℝ
   have symm (i j : V) : A i j = A j i := by
     change (if G.Adj i j then (1:ℝ) else 0) = (if G.Adj j i then 1 else 0)
-    rw [SimpleGraph.adj_comm]
+    by_cases h : G.Adj i j
+    · simp [h, G.symm h]
+    · have h' : ¬ G.Adj j i := fun e => h (G.symm e)
+      simp [h, h']
   have hA (i j : V) : 0 ≤ A i j := by
     change 0 ≤ if G.Adj i j then (1:ℝ) else 0
     split <;> norm_num
@@ -50,5 +54,18 @@ theorem simpleGraph_fixed_order (G : SimpleGraph V) [DecidableRel G.Adj]
   simpa only [show (fun i => (G.degree i : ℝ)) = degree A from funext (fun i => (deg i).symm)]
     using hbounds.1
 
+/-- Comparison with the actual star on the same number of vertices. -/
+theorem star_maximizes (G : SimpleGraph V) [DecidableRel G.Adj] (x : V → ℝ)
+    {ρ g : ℝ} (hρ : 0 < ρ) (hg : 1 ≤ g) (hx : ∀ i, 1 ≤ x i ∧ x i ≤ g)
+    (eigen : ∀ i, ∑ j, G.adjMatrix ℝ i j * x j = ρ*x i) (m : ℕ)
+    (hm : 1 ≤ m) (order : Fintype.card V = m+1) :
+    (dispersion (fun i => (G.degree i : ℝ)) - dispersion x) / g^2 ≤
+      (dispersion (degree (starAdjacency m)) - dispersion (starVector m)) /
+      (Real.sqrt m)^2 := by
+  have h := simpleGraph_fixed_order G x hρ hg hx eigen
+  rw [star_attains m hm]
+  simpa [order] using h
+
+#print axioms star_maximizes
 #print axioms simpleGraph_fixed_order
 end Clark

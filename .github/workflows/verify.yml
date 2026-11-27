@@ -176,8 +176,8 @@ jobs:
             lean --root="$folder" -o "$compiled/Scalar.olean" "$folder/Scalar.lean" || status=1
             lean --root="$folder" -o "$compiled/Moments.olean" "$folder/Moments.lean" || status=1
             lean --root="$folder" -o "$compiled/LowerFamily.olean" "$folder/LowerFamily.lean" || status=1
-            lean --root="$folder" -o "$compiled/SimpleGraphBound.olean" "$folder/SimpleGraphBound.lean" || status=1
             lean --root="$folder" -o "$compiled/Star.olean" "$folder/Star.lean" || status=1
+            lean --root="$folder" -o "$compiled/SimpleGraphBound.olean" "$folder/SimpleGraphBound.lean" || status=1
             exit "$status"
           '
       - name: Verify liu-odd-self-orthogonal-mds

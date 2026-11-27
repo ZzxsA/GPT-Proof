@@ -38,7 +38,15 @@ theorem normalized_arc_unique : ∀ a b c d e : Fin 5,
 /-- Every nonzero square in F₇ is 1, 2 or 4. -/
 def sq (i : Fin 3) : Nat := 2 ^ i.val
 
-theorem square_options : ∀ x : Fin 7, x ≠ 0 → ∃ i : Fin 3, x.val^2 % 7 = sq i := by decide
+private def squareIndex (x : Fin 7) : Fin 3 :=
+  match x.val with
+  | 1 | 6 => 0
+  | 2 | 5 => 2
+  | _ => 1
+
+theorem square_options : ∀ x : Fin 7, x ≠ 0 → ∃ i : Fin 3, x.val^2 % 7 = sq i := by
+  intro x hx
+  exact ⟨squareIndex x, (by decide : ∀ z : Fin 7, z ≠ 0 → z.val^2 % 7 = sq (squareIndex z)) x hx⟩
 
 def sixWeights (a b c d e f : Fin 3) : List Nat := [sq a, sq b, sq c, sq d, sq e, sq f]
 
@@ -63,6 +71,7 @@ theorem no_normalized_code (a b c d e : Fin 5) (u v w x y z h j : Fin 3)
     ¬ (m (fun _ => 1) = 0 ∧ m Prod.fst = 0 ∧ m Prod.snd = 0 ∧
        (m (fun p => p.1^2) + sq h) % 7 = 0 ∧ (m (fun p => p.2^2) + sq j) % 7 = 0) := by
   rw [normalized_arc_unique a b c d e ha]
+  dsimp only
   intro ⟨h₀, h₁, h₂, h₃, h₄⟩
   rcases diagonal_obstruction u v w x y z h₀ h₁ h₂ with left | right
   · rw [left, Nat.zero_add] at h₃

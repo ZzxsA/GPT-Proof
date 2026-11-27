@@ -38,8 +38,11 @@ private theorem degree_product (A : V → V → ℝ) (x : V → ℝ) {ρ : ℝ}
   congr 1
   simp only [degree, Finset.sum_mul]
   rw [Finset.sum_comm]
-  exact Finset.sum_congr rfl (fun j _ => by simpa only [show (fun i => A i j) = A j from
-    funext (fun i => symm i j)] using eigen j)
+  apply Finset.sum_congr rfl
+  intro j _
+  calc
+    _ = ∑ i, A j i * x i := Finset.sum_congr rfl (fun i _ => by rw [symm i j])
+    _ = _ := eigen j
 
 theorem hofmeister (A : V → V → ℝ) (x : V → ℝ) {ρ : ℝ}
     (symm : ∀ i j, A i j = A j i) (hA : ∀ i j, 0 ≤ A i j)

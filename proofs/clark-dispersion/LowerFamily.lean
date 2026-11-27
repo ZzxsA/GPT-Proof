@@ -1,4 +1,5 @@
 import GraphQuarter
+import Scalar
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic.FinCases
@@ -8,6 +9,17 @@ in Clark's problem. There are four equally large layers and a slot label
 (block,position) in each. The first layer is a clique. Each of the three
 other layers is complete multipartite with parts of size three. Each vertex
 outside the first layer is matched to the first-layer vertex in its slot. -/
+namespace Clark
+
+/-- Uniform lower bound, for actual vectors on a finite vertex set. -/
+theorem graph_lower {V : Type*} [Fintype V] [Nonempty V] (A : V → V → ℝ) (x : V → ℝ)
+    {g : ℝ} (hg : 1 ≤ g) (hx : ∀ i, 1 ≤ x i ∧ x i ≤ g) :
+    -(1:ℝ)/27 ≤ (dispersion (degree A) - dispersion x)/g^2 := by
+  apply lower_bound hg (dispersion_nonneg _)
+  simpa using dispersion_le_range x (by norm_num : (0:ℝ) < 1) (by linarith : 0 < g) hx
+
+end Clark
+
 namespace Clark.LowerFamily
 
 open scoped BigOperators
@@ -112,7 +124,10 @@ theorem gamma_formula (k : ℕ) :
   have d : Clark.degree (adjacency (k:=k)) =
       profile (k:=k) (size k+2) (size k-2) := funext degree_formula
   rw [d, profile_disp, profile_disp]
-  have s : 3 ≤ size k := by unfold size; positivity
+  have s : 3 ≤ size k := by
+    have hk : (0:ℝ) ≤ k := by positivity
+    unfold size
+    linarith
   have h : size k+2+3*(size k-2) ≠ 0 := by linarith
   have h' : size k-1 ≠ 0 := by linarith
   field_simp [h,h']

@@ -85,8 +85,7 @@ private theorem exact_formula {t : ℝ} (ht : 0 < t) :
   unfold loss
   rw [hsq, Real.sqrt_sq hu, heq]
   unfold rangeBound upper
-  field_simp [ne_of_gt ht, hden, ne_of_gt (show 0 < t+1 by linarith)]
-  <;> ring
+  field_simp [ne_of_gt ht, hden, ne_of_gt (show 0 < t+1 by linarith)] <;> ring <;> simp
 
 /-- t is the square root of the degree ratio; g is the principal ratio. -/
 theorem clark_envelope {c e g t : ℝ} (hc : 0 ≤ c) (he : 0 ≤ e) (ht : 1 ≤ t)

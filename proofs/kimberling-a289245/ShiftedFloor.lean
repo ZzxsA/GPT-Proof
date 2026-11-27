@@ -110,7 +110,7 @@ private theorem paired (a : Series) (n : ℕ) (f : Series)
       change f 0*a 1 + f 1*a 0 ≤ 0
       have x := mul_le_mul_of_nonneg_right h₀ (hp 1 (by omega))
       have y := mul_le_mul_of_nonneg_right h₁ (hp 0 (by omega))
-      have z := hg 0 (by omega)
+      have z : 2*a 0 ≤ a 1 := hg 0 (by omega)
       have u := hp 0 (by omega)
       omega
     | k+2 =>
@@ -124,7 +124,7 @@ private theorem paired (a : Series) (n : ℕ) (f : Series)
       change f 0*a (k+2) + (f 1*a (k+1) + product g a k) ≤ 0
       have x := mul_le_mul_of_nonneg_right h₀ (hp (k+2) (by omega))
       have y := mul_le_mul_of_nonneg_right h₁ (hp (k+1) (by omega))
-      have z := hg (k+1) (by omega)
+      have z : 2*a (k+1) ≤ a (k+2) := hg (k+1) (by omega)
       have u := hp (k+1) (by omega)
       omega
 
@@ -146,8 +146,11 @@ private theorem growth_of_reciprocal (r : ℝ) (lo : 5/2 ≤ r) (hi : r < 8/3)
   induction n using Nat.strongRecOn with
   | ind n ih =>
     match n with
-    | 0 => omega
+    | 0 =>
+      change 0 < a 0 ∧ 2*a 0 ≤ a 1
+      omega
     | 1 =>
+      change 0 < a 1 ∧ 2*a 1 ≤ a 2
       have e := tr 2
       change d 0*a 2 + (d 1*a 1 + d 2*a 0) = 0 at e
       rw [h₀,h₁,h₂] at e
@@ -166,6 +169,8 @@ private theorem growth_of_reciprocal (r : ℝ) (lo : 5/2 ≤ r) (hi : r < 8/3)
       change d 0*a (k+3)+(d 1*a (k+2)+(d 2*a (k+1)+product f a k))=0 at e
       rw [h₀,h₁,h₂] at e
       obtain ⟨p,q⟩ := ih (k+1) (by omega)
+      change 2*a (k+1) ≤ a (k+2) at q
+      change 0 < a (k+2) ∧ 2*a (k+2) ≤ a (k+3)
       omega
 
 private theorem congr_right (f a b : Series) (n : ℕ)
@@ -182,7 +187,7 @@ def coefficients (r : ℝ) (n : ℕ) : ℤ :=
   match n with
   | 0 => 1
   | m+1 => -product (fun i => kernel r (i+1))
-      (fun i => if h : i < m+1 then coefficients r i else 0) m
+      (fun i => if _h : i < m+1 then coefficients r i else 0) m
 termination_by n
 decreasing_by omega
 

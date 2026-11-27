@@ -160,7 +160,7 @@ jobs:
           git clone -q --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/research-mathlib"
           cd "$RUNNER_TEMP/research-mathlib"
           test "$(git rev-parse HEAD)" = c44e0c8ee63ca166450922a373c7409c5d26b00b
-          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289261/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289245/*.lean "$GITHUB_WORKSPACE"/proofs/bala-congruences/*.lean | sort -u)
+          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289261/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289245/*.lean "$GITHUB_WORKSPACE"/proofs/bala-congruences/*.lean "$GITHUB_WORKSPACE"/proofs/cicuttin-farey/*.lean | sort -u)
           lake exe cache get "${imports[@]}"
           mkdir -p "$RUNNER_TEMP/proof-olean"
       - name: Verify clark-dispersion
@@ -217,4 +217,15 @@ jobs:
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
             lean --root="$folder" -o "$compiled/Bala.olean" "$folder/Bala.lean"
+            lean --root="$folder" -o "$compiled/BalaSeries.olean" "$folder/BalaSeries.lean"
+          '
+      - name: Verify cicuttin-farey
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/cicuttin-farey"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            lean --root="$folder" -o "$compiled/FareyAlignment.olean" "$folder/FareyAlignment.lean"
           '

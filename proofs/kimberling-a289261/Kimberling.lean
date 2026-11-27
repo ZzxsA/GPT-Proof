@@ -105,7 +105,13 @@ private theorem kernel_identity :
   · obtain ⟨k, rfl⟩ : ∃ k, n = k+9 := ⟨n-9, by omega⟩
     change (0 : Int) = (floorKernel (k+9) + floorKernel (k+8)) -
       (floorKernel (k+1) + floorKernel k)
-    simp only [floorKernel]
+    have div_shift (j : Nat) :
+        13 * (j + 8 + 1) / 8 = 13 * (j + 1) / 8 + 13 := by
+      rw [show 13 * (j + 8 + 1) = 13 * (j + 1) + 8 * 13 by omega]
+      exact Nat.add_mul_div_left _ _ (by decide)
+    have hA : 13 * (k+9+1) / 8 = 13 * (k+1+1) / 8 + 13 := div_shift (k+1)
+    have hB := div_shift k
+    simp only [floorKernel, hA, hB, Int.ofNat_add]
     split <;> split <;> split <;> split <;> omega
 
 private theorem transformed {a : Series} (h : IsFloorReciprocal a) (n : Nat) :
@@ -153,7 +159,7 @@ theorem strictly_increasing_of_reciprocal {a : Series} (h : IsFloorReciprocal a)
     by_cases hn : n < 10
     · have vals := initial h
       have H : n = 0 ∨ n = 1 ∨ n = 2 ∨ n = 3 ∨ n = 4 ∨ n = 5 ∨ n = 6 ∨ n = 7 ∨ n = 8 ∨ n = 9 := by omega
-      rcases H with h'|h'|h'|h'|h'|h'|h'|h'|h'|h' <;> subst n <;> omega
+      rcases H with h'|h'|h'|h'|h'|h'|h'|h'|h'|h' <;> subst n <;> simp only [Nat.reduceAdd] <;> omega
     · obtain ⟨k, rfl⟩ : ∃ k, n = k+10 := ⟨n-10, by omega⟩
       have p := ih (k+3) (by omega)
       have d5 := ih (k+5) (by omega)
@@ -162,6 +168,7 @@ theorem strictly_increasing_of_reciprocal {a : Series} (h : IsFloorReciprocal a)
       have d8 := ih (k+8) (by omega)
       have d9 := ih (k+9) (by omega)
       have eqn := step h k
+      simp only [Nat.add_assoc, Nat.reduceAdd] at p d5 d6 d7 d8 d9 ⊢
       omega
 
 private theorem product_congr_right (f g g' : Series) (n : Nat)
@@ -190,6 +197,7 @@ theorem is_reciprocal : IsFloorReciprocal a289261 := by
     have eqn : a289261 (m+1) =
         -product (tail floorKernel) (fun i => if i < m+1 then a289261 i else 0) m := by
       rw [a289261]
+      simp only [dite_eq_ite]
     have cut := product_congr_right (tail floorKernel)
       (fun i => if i < m+1 then a289261 i else 0) a289261 m
       (fun i hi => if_pos (by omega))
@@ -200,5 +208,7 @@ theorem is_reciprocal : IsFloorReciprocal a289261 := by
 /-- Clark Kimberling's strict monotonicity conjecture in OEIS A289261. -/
 theorem a289261_strict (n : Nat) : a289261 n < a289261 (n+1) :=
   (strictly_increasing_of_reciprocal is_reciprocal n).2
+
+#print axioms a289261_strict
 
 end Kimberling

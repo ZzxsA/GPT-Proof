@@ -43,8 +43,8 @@ private theorem noIndependentTriple : ∀ u v w : V,
 
 theorem independent_size : ∀ {xs : List V}, Independent xs → xs.length ≤ 2
   | [], _ => by decide
-  | [_], _ => by decide
-  | [_,_], _ => by decide
+  | [_], _ => by simp
+  | [_,_], _ => by simp
   | u :: v :: w :: tail, h => by
     have sub : ([u,v,w] : List V).Sublist (u :: v :: w :: tail) :=
       (((List.nil_sublist tail).cons₂ w).cons₂ v).cons₂ u
@@ -62,7 +62,7 @@ private theorem filter_length_mono (l : List V) (p q : V → Bool)
     (h : ∀ v, p v = true → q v = true) :
     (l.filter p).length ≤ (l.filter q).length := by
   induction l with
-  | nil => decide
+  | nil => simp
   | cons v vs ih =>
     cases hp : p v with
     | false =>

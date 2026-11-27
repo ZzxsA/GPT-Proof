@@ -83,3 +83,16 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/rook-olean"
           lean -o "$RUNNER_TEMP/rook-olean/RookTenIndependent.olean" RookTenIndependent.lean
+      - name: Verify the periphery counterexample from the graph's edges
+        if: ${{ !cancelled() }}
+        working-directory: proofs/larson-van-cleemput-periphery
+        run: |
+          export LEAN_PATH="$RUNNER_TEMP/rook-olean"
+          python3 verify_graph.py
+          lean Prism.lean
+      - name: Enumerate smaller connected graphs
+        if: ${{ !cancelled() }}
+        working-directory: proofs/larson-van-cleemput-periphery
+        run: |
+          sudo apt-get install --yes nauty
+          python3 verify_graph.py --census nauty-geng

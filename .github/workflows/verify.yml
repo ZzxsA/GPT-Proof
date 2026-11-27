@@ -103,6 +103,12 @@ jobs:
           mkdir -p "$LEAN_PATH"
           (cd proofs/kimberling-a289261 && lean -o "$LEAN_PATH/Kimberling.olean" Kimberling.lean)
           lean proofs/kimberling-a078140/KimberlingFamily.lean
+      - name: Check the ternary nested MDS obstruction
+        if: ${{ !cancelled() }}
+        working-directory: proofs/huang-fang-fu-mds
+        run: |
+          python3 verify_hff.py
+          lean HuangFangFu.lean
 
   kimberling-real:
     runs-on: ubuntu-24.04

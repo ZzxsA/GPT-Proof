@@ -127,11 +127,8 @@ def coefficients (r : ℝ) (n : ℕ) : ℤ :=
 termination_by n
 decreasing_by omega
 
-theorem coefficients_are_reciprocal (r : ℝ) (lo : 3 / 2 ≤ r) (hi : r < 5 / 3) :
+private theorem reciprocal_of_unit (r : ℝ) (h₀ : kernel r 0 = 1) :
     IsReciprocal r (coefficients r) := by
-  have h₀ : kernel r 0 = 1 := by
-    have h := (initial r lo hi).1
-    simpa only [denominator, delay, add_zero] using h
   intro n
   cases n with
   | zero =>
@@ -151,11 +148,88 @@ theorem coefficients_are_reciprocal (r : ℝ) (lo : 3 / 2 ≤ r) (hi : r < 5 / 3
     rw [h₀, one_mul, eqn, cut]
     omega
 
+theorem coefficients_are_reciprocal (r : ℝ) (lo : 3 / 2 ≤ r) (hi : r < 5 / 3) :
+    IsReciprocal r (coefficients r) := by
+  apply reciprocal_of_unit
+  have h := (initial r lo hi).1
+  simpa only [denominator, delay, add_zero] using h
+
 theorem coefficients_strict (r : ℝ) (lo : 3 / 2 ≤ r) (hi : r < 5 / 3)
     (n : ℕ) : 0 < coefficients r n ∧ coefficients r n < coefficients r (n+1) :=
   strictlyIncreasing r lo hi _ (coefficients_are_reciprocal r lo hi) n
 
 #print axioms coefficients_strict
+
+private theorem first_three (r : ℝ) (lo : 1 ≤ r) (hi : r < 2) :
+    coefficients r 1 = floorAt r 2 ∧
+    coefficients r 2 = floorAt r 2 * coefficients r 1 - floorAt r 3 ∧
+    coefficients r 3 = floorAt r 2 * coefficients r 2 -
+      floorAt r 3 * coefficients r 1 + floorAt r 4 := by
+  let a := coefficients r
+  have h₀ : kernel r 0 = 1 := by
+    change ⌊(1 : ℝ) * r⌋ = (1 : ℤ)
+    apply Int.floor_eq_iff.mpr
+    constructor <;> norm_num <;> linarith
+  have h := reciprocal_of_unit r h₀
+  have e₀ := h 0
+  have e₁ := h 1
+  have e₂ := h 2
+  have e₃ := h 3
+  change kernel r 0 * a 0 = 1 at e₀
+  change kernel r 0 * a 1 + kernel r 1 * a 0 = 0 at e₁
+  change kernel r 0 * a 2 + (kernel r 1 * a 1 + kernel r 2 * a 0) = 0 at e₂
+  change kernel r 0 * a 3 +
+    (kernel r 1 * a 2 + (kernel r 2 * a 1 + kernel r 3 * a 0)) = 0 at e₃
+  have h₁ : kernel r 1 = -floorAt r 2 := rfl
+  have h₂ : kernel r 2 = floorAt r 3 := rfl
+  have h₃ : kernel r 3 = -floorAt r 4 := rfl
+  simp only [h₀, h₁, h₂, h₃, one_mul] at e₀ e₁ e₂ e₃
+  rw [e₀] at e₁ e₂ e₃
+  simp only [mul_one, neg_mul] at e₁ e₂ e₃
+  change a 1 = floorAt r 2 ∧ a 2 = floorAt r 2 * a 1 - floorAt r 3 ∧
+    a 3 = floorAt r 2 * a 2 - floorAt r 3 * a 1 + floorAt r 4
+  omega
+
+/-- Exact parameter range for strict increase when the initial floor is one. -/
+theorem strictlyIncreasing_iff (r : ℝ) (lo : 1 ≤ r) (hi : r < 2) :
+    (∀ n, coefficients r n < coefficients r (n+1)) ↔ 3 / 2 ≤ r ∧ r < 5 / 3 := by
+  constructor
+  · intro h
+    obtain ⟨e₁, e₂, e₃⟩ := first_three r lo hi
+    constructor
+    · by_contra! hl
+      have q₂ : floorAt r 2 = 2 := by
+        unfold floorAt
+        apply Int.floor_eq_iff.mpr
+        constructor <;> norm_num <;> linarith
+      have q₃ : 3 ≤ floorAt r 3 := by
+        unfold floorAt
+        apply Int.le_floor.mpr
+        norm_num <;> linarith
+      have t : coefficients r 1 < coefficients r 2 := h 1
+      rw [q₂] at e₁ e₂
+      omega
+    · by_contra! hu
+      have q₂ : floorAt r 2 = 3 := by
+        unfold floorAt
+        apply Int.floor_eq_iff.mpr
+        constructor <;> norm_num <;> linarith
+      have q₃ : floorAt r 3 = 5 := by
+        unfold floorAt
+        apply Int.floor_eq_iff.mpr
+        constructor <;> norm_num <;> linarith
+      have q₄ : floorAt r 4 < 8 := by
+        unfold floorAt
+        apply Int.floor_lt.mpr
+        norm_num <;> linarith
+      have t : coefficients r 2 < coefficients r 3 := h 2
+      rw [q₂] at e₁ e₂ e₃
+      rw [q₃] at e₂ e₃
+      omega
+  · rintro ⟨hl, hu⟩ n
+    exact (coefficients_strict r hl hu n).2
+
+#print axioms strictlyIncreasing_iff
 
 end
 end KimberlingReal

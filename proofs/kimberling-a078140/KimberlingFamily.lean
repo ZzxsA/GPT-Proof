@@ -86,7 +86,7 @@ private theorem prod_L_r (f a : Series) (n : Nat) :
   | succ n ih =>
     change f 0 * a n + product (fun i => f (i+1)) (L a) n = product f a n
     rw [ih]
-    cases n <;> simp [product,L]
+    cases n <;> simp [product,L] <;> rfl
 
 private theorem prod_zero (a : Series) (n : Nat) : product (fun _ => 0) a n = 0 := by
   induction n with
@@ -98,7 +98,24 @@ private theorem prod_zero (a : Series) (n : Nat) : product (fun _ => 0) a n = 0 
 private theorem short_product (a : Series) : product short a = Q (P a) := by
   funext n
   match n with
-  | 0 | 1 | 2 | 3 | 4 | 5 => simp [product, short, Q, P, L] <;> omega
+  | 0 =>
+    change 1*a 0 = Q (P a) 0
+    simp [Q,P,L] <;> omega
+  | 1 =>
+    change 1*a 1+((-2)*a 0) = Q (P a) 1
+    simp [Q,P,L] <;> omega
+  | 2 =>
+    change 1*a 2+((-2)*a 1+(0*a 0)) = Q (P a) 2
+    simp [Q,P,L] <;> omega
+  | 3 =>
+    change 1*a 3+((-2)*a 2+(0*a 1+(0*a 0))) = Q (P a) 3
+    simp [Q,P,L] <;> omega
+  | 4 =>
+    change 1*a 4+((-2)*a 3+(0*a 2+(0*a 1+(1*a 0)))) = Q (P a) 4
+    simp [Q,P,L] <;> omega
+  | 5 =>
+    change 1*a 5+((-2)*a 4+(0*a 3+(0*a 2+(1*a 1+(1*a 0))))) = Q (P a) 5
+    simp [Q,P,L] <;> omega
   | k+6 =>
     change 1*a (k+6) + ((-2)*a (k+5)+(0*a (k+4)+(0*a (k+3)+
       (1*a (k+2)+(1*a (k+1)+product (fun _ => 0) a k))))) =
@@ -195,9 +212,9 @@ private theorem initial_force (n : Nat) :
 private theorem prior (f : Series) (n : Nat) (h : ∀ i, i<n → 0 ≤ f i) :
     0 ≤ L f n ∧ 0 ≤ L (L f) n ∧ 0 ≤ L (L (L f)) n := by
   match n with
-  | 0 => decide
-  | 1 => exact ⟨h 0 (by omega), by decide, by decide⟩
-  | 2 => exact ⟨h 1 (by omega), h 0 (by omega), by decide⟩
+  | 0 => simp [L]
+  | 1 => exact ⟨h 0 (by omega), by simp [L], by simp [L]⟩
+  | 2 => exact ⟨h 1 (by omega), h 0 (by omega), by simp [L]⟩
   | k+3 => exact ⟨h (k+2) (by omega), h (k+1) (by omega), h k (by omega)⟩
 
 private theorem dominated (d : Series)
@@ -244,7 +261,10 @@ theorem strictlyIncreasing (d a : Series)
     | succ k =>
       change 0 ≤ (1-d 0)*c (k+1) + product (fun j => base (j+1)-d (j+1)) c k
       have le := prod_nonneg (fun j => base (j+1)-d (j+1)) c k
-        (fun j _ => by have := dominated d h0 h1 h2 h3 hbound (j+1); omega)
+        (fun j _ => by
+          change 0 ≤ base (j+1) - d (j+1)
+          have := dominated d h0 h1 h2 h3 hbound (j+1)
+          omega)
         (fun j hj => hi j (by omega))
       simpa [h0] using le
   have qu : Q u = w := solved w
@@ -268,7 +288,7 @@ theorem strictlyIncreasing (d a : Series)
     omega
   have numNonneg (i : Nat) : 0 ≤ numerator i := by
     match i with
-    | 0 | 1 | _+2 => decide
+    | 0 | 1 | _+2 => simp [numerator]
   have main (i : Nat) : 0 ≤ g i ∧ 0 ≤ u i ∧ 0 ≤ v i ∧ (0<i → 0<v i) ∧ 0<c i := by
     induction i using Nat.strongRecOn with
     | ind i ih =>

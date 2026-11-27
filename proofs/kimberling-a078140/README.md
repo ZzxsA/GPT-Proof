@@ -34,7 +34,7 @@ For $1\le r<3/2$, one has $a_1=2$ and $a_2=4-\lfloor3r\rfloor\le1$. For $5/3\le 
 
 ## Lean verification
 
-`KimberlingReal.coefficients_are_reciprocal` checks the defining convolution. The theorems `KimberlingReal.coefficients_strict` and `KimberlingReal.strictlyIncreasing_iff` state the positive-coefficient conclusion and the full classification. `KimberlingFamily.strictlyIncreasing` supplies the integer coefficient argument for the comparison series. These Lean theorems cover monotonicity. The analytic ratio-limit proof is given separately.
+`KimberlingReal.coefficients_are_reciprocal` checks the defining convolution. The theorems `KimberlingReal.coefficients_strict` and `KimberlingReal.strictlyIncreasing_iff` state the positive-coefficient conclusion and the full classification. `KimberlingFamily.strictlyIncreasing` supplies the integer coefficient argument for the comparison series. These Lean theorems cover monotonicity. The analytic ratio-limit proof and its exact arithmetic checks are in the [separate research note](https://github.com/ZzxsA/GPT-Proof/blob/ee3c2f00e27661f260a8772f28dc013931c0be12/proofs/kimberling-a078140/RATIO.md).
 
 From the repository root, in a shell with Lean 4.19.0 and a built mathlib4 v4.19.0 checkout, set `MATHLIB` to its absolute path and run
 

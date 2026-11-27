@@ -20,7 +20,7 @@ jobs:
           python3 proofs/knor-geodesics-14/verify_geodesics.py
       - name: Install the pinned Lean toolchain
         run: |
-          sudo apt-get update -qq
+          sudo apt-get -o Dir::Etc::sourcelist=sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
           sudo apt-get install --yes elan
           elan toolchain install "$(cat lean-toolchain)"
       - name: Check the counterexample
@@ -122,7 +122,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Lean and the matching mathlib release
         run: |
-          sudo apt-get update -qq
+          sudo apt-get -o Dir::Etc::sourcelist=sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
           sudo apt-get install --yes elan
           elan toolchain install "$(cat lean-toolchain)"
           git clone --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/kimberling-mathlib"

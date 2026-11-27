@@ -42,6 +42,10 @@ Lean checks that its finite-field multiplication table agrees with polynomial mu
 | 16 | 2295 |
 | 18 | 1800 |
 
+## Related proof
+
+The research note proves the general even-field classification, using classical results on hyperovals. Its all-field argument is a written mathematical proof. The finite certificate above covers the order-16 witness. [Classification by field size](https://github.com/ZzxsA/GPT-Proof/blob/ee3c2f00e27661f260a8772f28dc013931c0be12/proofs/liu-self-orthogonal-mds/CLASSIFICATION.md)
+
 ## Prior work
 
 The underlying hyperoval dates to Lunelli and Sce (1958). Its ordinary $[18,3,16]$ MDS code also appears explicitly in the classification literature. The additional condition needed to refute Liu's conjecture is Euclidean self-orthogonality after choosing column scalars. A search on 27 November 2026 for the conjecture, parameters, Euclidean hulls, and hyperoval-code rescalings identified no earlier explicit Euclidean counterexample. Earlier work on the dual of a Schur square also gives the general method of testing diagonal scalings. Quantum CSS constructions using two mutually orthogonal codes and Hermitian self-orthogonality use different hypotheses. [Zhu and Liao](https://arxiv.org/abs/2201.02758) · [Ezerman, Jitman, Kiah and Ling, Theorem 5](https://doi.org/10.1142/S0219749913500275) · [Ball and Vilar](https://doi.org/10.1007/s00022-021-00619-x)

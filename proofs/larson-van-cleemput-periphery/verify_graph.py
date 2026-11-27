@@ -124,7 +124,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--census", metavar="GENG", help="path to the nauty geng executable")
     args = parser.parse_args()
-    witness = check(prism(5))
+    model = prism(5)
+    archived = decode(b"IJ]KlNF}?")
+    archive_order = [0, 5, 6, 7, 8, 9, 4, 3, 2, 1]
+    assert sorted(archive_order) == list(range(10))
+    for u, v in combinations(range(10), 2):
+        assert bool(model[u] & (1 << v)) == bool(archived[archive_order[u]] & (1 << archive_order[v]))
+    witness = check(model)
     assert witness == (2, 10, 5, 2)
     print("K5 x K2: alpha = 2, periphery = 10, maximum degree = 5, residue = 2.", flush=True)
     if args.census:

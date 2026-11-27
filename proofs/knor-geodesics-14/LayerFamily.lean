@@ -213,7 +213,9 @@ private def body : Nat → List (Fin 3) → List Vertex
   | i, d :: ds => .middle i d :: body (i+1) ds
 
 private theorem body_length (i : Nat) (ds : List (Fin 3)) : (body i ds).length = ds.length := by
-  induction ds generalizing i <;> simp [body,*]
+  induction ds generalizing i with
+  | nil => rfl
+  | cons d ds ih => simp only [body, List.length_cons, ih (i+1)]
 
 private theorem body_rows (m i : Nat) (ds : List (Fin 3)) (hi : i+ds.length ≤ m) :
     Rows m (i+2) (body i ds) := by
@@ -292,7 +294,9 @@ private def value : List (Fin 3) → Nat
   | d :: ds => d.val + 3 * value ds
 
 private theorem digits_length (m z : Nat) : (digits m z).length = m := by
-  induction m generalizing z <;> simp [digits,*]
+  induction m generalizing z with
+  | zero => rfl
+  | succ m ih => simp only [digits, List.length_cons, ih (z/3)]
 
 private theorem value_digits (m z : Nat) (hz : z < 3^m) : value (digits m z) = z := by
   induction m generalizing z with

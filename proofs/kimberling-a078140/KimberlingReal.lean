@@ -167,9 +167,11 @@ private theorem first_three (r : ℝ) (lo : 1 ≤ r) (hi : r < 2) :
       floorAt r 3 * coefficients r 1 + floorAt r 4 := by
   let a := coefficients r
   have h₀ : kernel r 0 = 1 := by
-    change ⌊(1 : ℝ) * r⌋ = (1 : ℤ)
-    apply Int.floor_eq_iff.mpr
-    constructor <;> norm_num <;> linarith
+    have q : floorAt r 1 = 1 := by
+      unfold floorAt
+      apply Int.floor_eq_iff.mpr
+      constructor <;> norm_num <;> linarith
+    simpa [kernel] using q
   have h := reciprocal_of_unit r h₀
   have e₀ := h 0
   have e₁ := h 1

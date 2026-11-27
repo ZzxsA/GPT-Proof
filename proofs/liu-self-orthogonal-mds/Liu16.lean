@@ -117,6 +117,16 @@ theorem euclidean_gram_zero :
 
 theorem all_three_column_minors_nonzero : checkTriples columns = true := by decide
 
+/-- Select a generator column by its position, from zero to seventeen. -/
+def column (i : Fin 18) : Col := columns.get ⟨i.val, by
+  change i.val < 18
+  exact i.isLt⟩
+
+/-- Pointwise version of the same minor check, quantified over all positions. -/
+theorem every_ordered_minor :
+    ∀ i j k : Fin 18, i < j → j < k →
+      det (column i) (column j) (column k) ≠ 0 := by decide
+
 /- The minors imply rank three, and a nonzero row vector kills at most two
 columns: any three such columns would be contained in its two-dimensional
 kernel. The resulting code therefore has distance at least 16. Two columns
@@ -126,5 +136,6 @@ Bilinearity extends the six row inner-product checks to the entire code. -/
 #print axioms mul_is_polynomial_multiplication
 #print axioms euclidean_gram_zero
 #print axioms all_three_column_minors_nonzero
+#print axioms every_ordered_minor
 
 end Liu16

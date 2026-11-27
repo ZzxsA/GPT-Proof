@@ -1,5 +1,7 @@
 # A missing case in a statement on MDS code intersections
 
+**ZzxsA and ChatGPT (OpenAI)**
+
 Huang, Fang and Fu's Theorem 4 in the July 2021 preprint asserts existence of a pair of length-`q+1` linear MDS codes of dimensions `k1,k2` with intersection dimension `l`, under the displayed dimension bounds and the condition that at least one of `l,k1-l,k2-l` equals one. The two triples explicitly excluded are `(1,2,1)` and `(2,1,1)`. The journal article appeared in 2022. The general existence statement with those same two exceptions was repeated in the 2026 paper by Zheng, Huang and Zhu. The theorem number here refers to the preprint. [Preprint, Theorem 4, p. 8](https://arxiv.org/pdf/2107.04166) · [2022 journal article](https://doi.org/10.1007/s12095-022-00582-7) · [2026 restatement](https://doi.org/10.1016/j.ffa.2025.102758)
 
 At `q=3` and `(k1,k2,l)=(2,3,2)`, all stated hypotheses hold. An intersection of dimension two equals the smaller code. Such a containment would dualize to a full-support ternary `[4,1,4]` subcode of a `[4,2,3]` MDS code. The four columns of any generator of the latter give four distinct points of the projective line over `F₃`. They exhaust that line, so every nonzero row combination vanishes in exactly one coordinate. This proves the required nonexistence. The original paper itself gives the corresponding obstruction for its expressly excluded primal triple.

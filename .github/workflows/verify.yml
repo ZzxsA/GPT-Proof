@@ -56,3 +56,10 @@ jobs:
           export LEAN_PATH="$RUNNER_TEMP/distinct-sums"
           lean -o "$LEAN_PATH/FiveCoverage.olean" FiveCoverage.lean
           lean FiveCharacterization.lean
+      - name: Check distinct sums with restricted exponents
+        if: ${{ !cancelled() }}
+        working-directory: proofs/sun-a362861-1ii
+        run: |
+          python3 verify_pairs.py
+          mkdir -p "$RUNNER_TEMP/odd-pair"
+          lean -o "$RUNNER_TEMP/odd-pair/ThreeSeven.olean" ThreeSeven.lean

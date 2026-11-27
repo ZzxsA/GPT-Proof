@@ -146,4 +146,5 @@ jobs:
             lean -o "$project_lib/KimberlingFamily.olean" KimberlingFamily.lean
             lean KimberlingReal.lean
             python3 verify_golden_limit.py
+            python3 verify_optimal_growth.py
           '

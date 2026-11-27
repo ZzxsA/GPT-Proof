@@ -1,0 +1,23 @@
+# Euclidean self-orthogonal hyperoval codes in even characteristic
+
+**ZzxsA and ChatGPT (OpenAI)**
+
+**Theorem.** Let $q$ be a power of two. A Euclidean self-orthogonal linear $[q+2,3,q]_q$ MDS code exists exactly when $q\ge16$. More precisely, for $q\ge4$, a hyperoval in $\mathrm{PG}(2,q)$ admits a choice of nonzero column multipliers giving a self-orthogonal generator exactly when it is irregular.
+
+Shu Liu's Conjecture 1 asserts nonexistence for every even $q\ge4$. The threshold above refutes the conjecture and identifies all its exceptions. The argument below is a mathematical proof for every even prime power. The accompanying Lean certificate checks the concrete generator at the smallest positive case, $q=16$. [Liu, §1.2, Conjecture 1](https://arxiv.org/html/2611.30048v1)
+
+## Proof
+
+**The geometric representation.** Let $G$ have three rows and $q+2$ columns $p_i$ over $\mathbb F_q$. It generates an MDS code of dimension three exactly when every three columns are linearly independent. Indeed, the zero coordinates of a word $uG$ are the columns in the kernel of the linear functional $u$. Three independent columns cannot lie in such a kernel for $u\ne0$, and any two columns have a common nonzero annihilator. Thus the minimum distance is $(q+2)-2=q$. In projective coordinates the columns give a *hyperoval*, a set of $q+2$ points with no three collinear. Conversely, any choice of nonzero vector representatives of a hyperoval gives such a matrix. Scaling columns preserves this property. A hyperoval is called *regular* when it contains a nonsingular conic, which comprises $q+1$ rational points. [Ball and Lavrauw, §15.1](https://web.mat.upc.edu/simeon.michael.ball/expositoryarcs.pdf)
+
+**The self-orthogonality equations.** Form the matrix $M$ with six rows by applying
+$$
+ (x,y,z)\longmapsto(x^2,xy,xz,y^2,yz,z^2)^T
+$$
+to each $p_i$. The row space of $M$ consists of evaluations of homogeneous quadratic forms on these particular representatives. For nonzero multipliers $s_i$, the matrix $G'=G\operatorname{diag}(s_i)$ has $G'G'^T=0$ exactly when $M(s_i^2)_i=0$, by the six entries of the symmetric Gram matrix. Its row space is then Euclidean self-orthogonal by bilinearity. Squaring is a bijection of $\mathbb F_q$, so the required scaling exists exactly when $W=\ker M$ contains a vector with all coordinates nonzero.
+
+**Regular hyperovals are excluded.** Suppose $q\ge4$. A coordinate $i$ is identically zero on $W$ exactly when $e_i\in W^\perp=\operatorname{row}(M)$. Equivalently, a homogeneous quadratic form vanishes on the other $q+1$ points and is nonzero on $p_i$, after normalization. A singular plane conic splits over the algebraic closure into at most two lines. Each line contains at most two of the hyperoval's points, so their union cannot contain those $q+1\ge5$ points. A nonsingular conic through them already accounts for all its rational points. Thus a coordinate vanishes identically on $W$ exactly when removing that point leaves a nonsingular conic. A regular hyperoval therefore forces a zero coordinate and precludes self-orthogonality. For an irregular hyperoval every coordinate projection of $W$ is nonzero. [Moorhouse, *Incidence Geometry*, chapter 12](https://math.ucr.edu/home/baez/qg-fall2016/incidence_geometry.pdf)
+
+**A vector nonzero everywhere.** If a subspace of $\mathbb F_q^n$ has codimension $r<q-1$ and no identically zero coordinate, it has a vector with all coordinates nonzero. Put a generator in systematic form $[I_{n-r}\mid A]$ after a coordinate permutation. Choose the $n-r$ message entries independently and uniformly in $\mathbb F_q^*$. Each of the remaining $r$ coordinates is a linear form with a nonzero coefficient. Conditional on all other entries, at most one of the $q-1$ choices for that coefficient's message entry makes the form vanish. The union bound gives probability at most $r/(q-1)<1$ of any zero coordinate. For $W=\ker M$ the codimension is at most six. Consequently every irregular hyperoval for $q\ge8$ admits a self-orthogonal scaling.
+
+**The threshold.** All hyperovals for $q=4,8$ are regular. For every even prime power $q\ge16$ an irregular hyperoval exists. Applying the two directions proved above gives the asserted classification. At $q=2$, a self-orthogonal subspace of $\mathbb F_2^4$ has dimension at most two since the Euclidean form is nondegenerate. The proof uses the established existence threshold for irregular hyperovals and is independent of the Main MDS Conjecture. [Moorhouse, chapter 12](https://math.ucr.edu/home/baez/qg-fall2016/incidence_geometry.pdf) · [Brown, §2.3.2, for the order-16 Lunelli–Sce example](https://cage.ugent.be/~fdc/intensivecourse2/brown_2.pdf)

@@ -109,6 +109,12 @@ jobs:
         run: |
           python3 verify_hff.py
           lean HuangFangFu.lean
+      - name: Verify the 16-ary self-orthogonal MDS code
+        if: ${{ !cancelled() }}
+        working-directory: proofs/liu-self-orthogonal-mds
+        run: |
+          python3 verify_liu16.py
+          lean Liu16.lean
 
   kimberling-real:
     runs-on: ubuntu-24.04

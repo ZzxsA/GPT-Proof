@@ -111,7 +111,8 @@ private theorem kernel_identity :
       exact Nat.add_mul_div_left _ _ (by decide)
     have hA : 13 * (k+9+1) / 8 = 13 * (k+1+1) / 8 + 13 := div_shift (k+1)
     have hB := div_shift k
-    simp only [floorKernel, hA, hB, Int.ofNat_add]
+    have cast_shift (j : Nat) : Int.ofNat (j + 13) = Int.ofNat j + 13 := rfl
+    simp only [floorKernel, hA, hB, cast_shift]
     split <;> split <;> split <;> split <;> omega
 
 private theorem transformed {a : Series} (h : IsFloorReciprocal a) (n : Nat) :
@@ -185,7 +186,7 @@ def a289261 (n : Nat) : Int :=
   match n with
   | 0 => 1
   | m+1 =>
-    -product (tail floorKernel) (fun i => if hi : i < m+1 then a289261 i else 0) m
+    -product (tail floorKernel) (fun i => if _hi : i < m+1 then a289261 i else 0) m
 termination_by n
 decreasing_by omega
 

@@ -96,3 +96,38 @@ jobs:
         run: |
           sudo apt-get install --yes nauty
           python3 verify_graph.py --census nauty-geng
+      - name: Verify the coefficientwise comparison
+        if: ${{ !cancelled() }}
+        run: |
+          export LEAN_PATH="$RUNNER_TEMP/kimberling-olean"
+          mkdir -p "$LEAN_PATH"
+          (cd proofs/kimberling-a289261 && lean -o "$LEAN_PATH/Kimberling.olean" Kimberling.lean)
+          lean proofs/kimberling-a078140/KimberlingFamily.lean
+
+  kimberling-real:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean and the matching mathlib release
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install --yes elan
+          elan toolchain install "$(cat lean-toolchain)"
+          git clone --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/kimberling-mathlib"
+          cd "$RUNNER_TEMP/kimberling-mathlib"
+          test "$(git rev-parse HEAD)" = c44e0c8ee63ca166450922a373c7409c5d26b00b
+          lake exe cache get Mathlib/Data/Real/Archimedean.lean Mathlib/Algebra/Order/Floor/Ring.lean Mathlib/Tactic/Linarith.lean Mathlib/Tactic/Ring.lean
+      - name: Verify the floor-series result for real parameters
+        run: |
+          cd "$RUNNER_TEMP/kimberling-mathlib"
+          lake env bash -eu -c '
+            project_lib="$RUNNER_TEMP/kimberling-olean"
+            mkdir -p "$project_lib"
+            export LEAN_PATH="$project_lib:$LEAN_PATH"
+            cd "$GITHUB_WORKSPACE/proofs/kimberling-a289261"
+            lean -o "$project_lib/Kimberling.olean" Kimberling.lean
+            cd ../kimberling-a078140
+            lean -o "$project_lib/KimberlingFamily.olean" KimberlingFamily.lean
+            lean KimberlingReal.lean
+            python3 verify_golden_limit.py
+          '

@@ -103,7 +103,8 @@ def prism(m):
 
 
 def census(geng):
-    for n in range(1, 10):
+    expected_counts = (1, 1, 2, 6, 21, 112, 853, 11117, 261080)
+    for n, expected in enumerate(expected_counts, start=1):
         counts = 0
         hits = []
         with subprocess.Popen([geng, "-cq", str(n)], stdout=subprocess.PIPE) as process:
@@ -115,9 +116,8 @@ def census(geng):
             if process.wait() != 0:
                 raise RuntimeError("geng failed")
         print(f"order {n}: {counts} connected graphs, {len(hits)} violations", flush=True)
-        if hits:
-            print(f"First examples: {hits[:3]}", flush=True)
-    return
+        if counts != expected or hits:
+            raise AssertionError((n, expected, counts, hits[:3]))
 
 
 if __name__ == "__main__":

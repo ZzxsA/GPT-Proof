@@ -23,6 +23,8 @@ For the two Conjecture 3 entries, an admissible sum uses terms of the form $k^a+
 
 [Sun · OEIS A362861, Conjecture 1(i)](proofs/sun-a362861-1i/) asks which positive even integers are sums of distinct values of the form $b^i+b^j$. For $b=5$, exactly the 14 listed indices fail. For $b=3$, every positive even integer has a representation. [Base five](proofs/sun-a362861-1i/FiveCharacterization.lean) · [Base three](proofs/sun-a362861-1i/Ternary.lean)
 
+[Sun · OEIS A362861, Conjecture 1(ii), first assertion](proofs/sun-a362861-1ii/) asks about distinct summands of the form $3^a+7^b$. Every positive even integer has a representation, already with $b\le 1$. More generally, the unordered pairs of odd bases greater than one that cover every positive even integer are exactly $(3,3),(3,5),(3,7)$. [Lean classification](proofs/sun-a362861-1ii/Classification.lean)
+
 ## Open problems with a constructive answer
 
 [Knor, Sedlar, Škrekovski and Zhang · Problem 14](proofs/knor-geodesics-14/) asks for a graph family exceeding their benchmark for the number of shortest paths. On nine vertices the count rises from 90 to 105. As the graph order increases, the ratio tends to $121/81$. This resolves the construction part of the question. [Finite Lean certificates](proofs/knor-geodesics-14/Geodesics.lean) · [General lower bound](proofs/knor-geodesics-14/LayerFamily.lean)

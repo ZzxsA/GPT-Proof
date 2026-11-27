@@ -56,3 +56,18 @@ jobs:
           export LEAN_PATH="$RUNNER_TEMP/distinct-sums"
           lean -o "$LEAN_PATH/FiveCoverage.olean" FiveCoverage.lean
           lean FiveCharacterization.lean
+      - name: Check distinct sums with restricted exponents
+        if: ${{ !cancelled() }}
+        working-directory: proofs/sun-a362861-1ii
+        run: |
+          python3 verify_pairs.py
+          mkdir -p "$RUNNER_TEMP/odd-pair"
+          lean -o "$RUNNER_TEMP/odd-pair/ThreeSeven.olean" ThreeSeven.lean
+      - name: Check the odd-base obstructions and classification
+        if: ${{ !cancelled() }}
+        working-directory: proofs/sun-a362861-1ii
+        run: |
+          export LEAN_PATH="$RUNNER_TEMP/odd-pair"
+          mkdir -p "$LEAN_PATH"
+          lean -o "$LEAN_PATH/Obstructions.olean" Obstructions.lean
+          lean Classification.lean

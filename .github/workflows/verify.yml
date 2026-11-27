@@ -147,3 +147,40 @@ jobs:
             lean KimberlingReal.lean
             python3 verify_golden_limit.py
           '
+
+  additional-proofs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Lean and mathlib versions
+        run: |
+          sudo apt-get -o Dir::Etc::sourcelist=sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
+          sudo apt-get install --yes elan
+          elan toolchain install "$(cat lean-toolchain)"
+          git clone -q --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/research-mathlib"
+          cd "$RUNNER_TEMP/research-mathlib"
+          test "$(git rev-parse HEAD)" = c44e0c8ee63ca166450922a373c7409c5d26b00b
+          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean | sort -u)
+          lake exe cache get "${imports[@]}"
+          mkdir -p "$RUNNER_TEMP/proof-olean"
+      - name: Verify clark-dispersion
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/clark-dispersion"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            lean --root="$folder" -o "$compiled/GraphQuarter.olean" "$folder/GraphQuarter.lean"
+            lean --root="$folder" -o "$compiled/Scalar.olean" "$folder/Scalar.lean"
+          '
+      - name: Verify liu-odd-self-orthogonal-mds
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/liu-odd-self-orthogonal-mds"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            lean --root="$folder" -o "$compiled/LiuSeven.olean" "$folder/LiuSeven.lean"
+          '

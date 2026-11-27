@@ -7,6 +7,8 @@ on:
     paths:
       - '.github/workflows/counterexamples.yml'
       - 'counterexamples/**'
+      - 'proofs/agf-*/**'
+      - 'proofs/.gitattributes'
       - 'lean-toolchain'
   workflow_dispatch:
     inputs:
@@ -121,7 +123,7 @@ jobs:
           elan toolchain install "$ELAN_TOOLCHAIN" 2>&1 | tee -a "$RESULTS/logs/toolchain.log"
           lean --version 2>&1 | tee -a "$RESULTS/logs/toolchain.log"
 
-      - name: Typecheck both certificate modules and every generated proof
+      - name: Typecheck shared modules, indexed proofs and generated witnesses
         run: |
           cd counterexamples
           for module in CycleCertificate DegreeCertificate; do
@@ -130,13 +132,13 @@ jobs:
           done
           test -s "$RESULTS/degree/DegreeWitnesses.lean"
           shopt -s nullglob
-          for file in "$RESULTS"/fixture/Witness_*.lean "$RESULTS"/cycles/Witness_*.lean "$RESULTS"/degree/DegreeWitnesses.lean; do
+          for file in "$GITHUB_WORKSPACE"/proofs/agf-*/Witness_*.lean "$RESULTS"/fixture/Witness_*.lean "$RESULTS"/cycles/Witness_*.lean "$RESULTS"/degree/DegreeWitnesses.lean; do
             dir=$(dirname "$file")
             name=$(basename "$file")
             echo "Checking $(basename "$dir")/$name" | tee -a "$RESULTS/logs/proofs.log"
             (cd "$dir" && lean "$name") 2>&1 | tee -a "$RESULTS/logs/proofs.log"
           done
-          echo 'All generated proofs passed Lean.' | tee -a "$RESULTS/logs/proofs.log" >> "$GITHUB_STEP_SUMMARY"
+          echo 'All indexed graph proofs and generated witnesses passed Lean.' | tee -a "$RESULTS/logs/proofs.log" >> "$GITHUB_STEP_SUMMARY"
           echo 'The cycle window and degree seed are recorded in plan.json.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preserve sources, certificates, search results and logs

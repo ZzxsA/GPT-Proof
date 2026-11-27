@@ -4,6 +4,8 @@
 
 The first campaign tests graph conjectures proposed by Ján Pastorek's AutoGraphForge. Each catalog entry links to the statement at a fixed upstream commit. Python finds a graph and produces a witness. Lean checks the mathematical certificate. Historical priority requires a separate literature search. [Upstream project](https://github.com/JanPastorek/AutoGraphForge) · [Daily runs and downloadable artifacts](https://github.com/ZzxsA/GPT-Proof/actions/workflows/counterexamples.yml)
 
+[Proof index](../README.md#proof-index)
+
 ## The first three witnesses
 
 Here θ is the minimum number of cliques covering all vertices. A clique is a set of pairwise adjacent vertices. The burning number b is the minimum number of rounds needed to burn the graph. In each round, choose one vertex that was unburned at the end of the preceding round. Ignite it while fire spreads from all previously burning vertices to their neighbors.
@@ -16,7 +18,7 @@ Here θ is the minimum number of cliques covering all vertices. A clique is a se
 
 For the first witness, label the cycle from 0 to 22 and ignite vertices 4, 12, 18, 21 and 22 in that order. At the end of round five their fires cover vertices 0–8, 9–15, 16–20, 20–22 and 22, respectively. Every clique contains at most two vertices, so covering 23 vertices requires at least 12 cliques. The conjecture gives at most 11. The proof only needs these one-sided bounds. The other rows give the contradictions 17 > 16 and 21 > 20. The table gives the first violating cycle for each proposal, with no claim about the smallest graph among all graph classes.
 
-The three complete generated Lean files are committed with the project. Each `violates_` theorem asserts existence of the two optimal values and gives a strict inequality in the direction opposite the proposal. [23-vertex witness](examples/Witness_c5b13d43.lean) · [33-vertex witness](examples/Witness_31b3af5f.lean) · [41-vertex witness](examples/Witness_a1136330.lean)
+The three complete generated Lean files are committed with the project. Each `violates_` theorem asserts existence of the two optimal values and gives a strict inequality in the direction opposite the proposal. [23-vertex witness](../proofs/agf-1656/Witness_c5b13d43.lean) · [33-vertex witness](../proofs/agf-2256/Witness_31b3af5f.lean) · [41-vertex witness](../proofs/agf-2618/Witness_a1136330.lean)
 
 ## An infinite family
 

@@ -2,33 +2,19 @@
 
 **ZzxsA and ChatGPT (OpenAI)**
 
-## Counterexample search
+## Proof index
 
-The daily graph search checks published conjecture statements against explicit finite graphs and emits Lean certificates for hits. The first three witnesses are cycles on 23, 33 and 41 vertices. Each refutes a different numbered proposal from AutoGraphForge. The repository records the original hypotheses and the evidence for each failure. [Statements, witnesses and reproduction commands](counterexamples/README.md) · [Search runs](https://github.com/ZzxsA/GPT-Proof/actions/workflows/counterexamples.yml)
+Each entry links to the original conjecture, an explicit counterexample and instructions for checking the proof. For the Harkness sequence, $a(n)$ is the least positive period. For graphs, θ is the fewest cliques needed to cover all vertices and b is the fewest rounds needed to burn the graph.
 
-## The Harkness period conjecture
+| Conjecture | Claim | Counterexample | Lean |
+|---|---|---|---|
+| [Harkness period conjecture · OEIS A353890](proofs/harkness-period/) | The largest prime factor of $a(n)$ equals $(2^n+1)/3$ for prime $n\ge5$. | At $n=29$, the prediction is composite: $178956971=59\cdot3033169$. | [Lean proof](proofs/harkness-period/HarknessPeriod.lean) |
+| [AutoGraphForge #1656 · Claw-free regular graphs](proofs/agf-1656/) | θ ≤ 3b − 4 | The 23-vertex cycle makes the left side at least 12 and the proposed upper bound at most 11. | [Lean certificate](proofs/agf-1656/Witness_c5b13d43.lean) |
+| [AutoGraphForge #2256 · Graphs of maximum degree three or less](proofs/agf-2256/) | θ ≤ 3b − 2 | The 33-vertex cycle makes the left side at least 17 and the proposed upper bound at most 16. | [Lean certificate](proofs/agf-2256/Witness_31b3af5f.lean) |
+| [AutoGraphForge #2618 · Eulerian graphs](proofs/agf-2618/) | θ ≤ 2b + 6 | The 41-vertex cycle makes the left side at least 21 and the proposed upper bound at most 20. | [Lean certificate](proofs/agf-2618/Witness_a1136330.lean) |
 
-For a prime exponent $n\ge 5$, consider the binary sequence that records whether consecutive differences of $n$th powers are coprime. Write $a(n)$ for its least positive period. Samuel Harkness conjectured that the largest prime factor of $a(n)$ equals $J_n=(2^n+1)/3$. [Original conjecture, OEIS A353890](https://oeis.org/A353890)
+The Harkness folder also contains the proof of the general period theorem and two independent computations of the exact period. [Mathematical proof](proofs/harkness-period/PROOF.md)
 
-The first counterexample is **$n=29$**. The prediction is $178956971=59\cdot3033169$, whereas the largest prime factor of the actual period is **108050869**. More generally, every prime factor of $a(n)$ is at most $J_n$, with equality attained if and only if $J_n$ is prime. The factorization of $J_{29}$ was recorded before the conjecture. [Proof and exact period](PROOF.md) · [Earlier factorization, OEIS A250291](https://oeis.org/A250291)
+## Ongoing search
 
-## Reproduce the calculation
-
-Run either of the following with Python 3.8 or later. Both use only the standard library.
-
-```sh
-python verify_harkness.py
-python harkness_independent.py
-```
-
-The first program computes integer determinants, factors them by trial division, and produces a modular witness for each prime. The second computes the same resultants by polynomial division over the rationals. Both programs check all seven smaller prime exponents in the conjecture's domain and report the same 17 prime factors of $a(29)$.
-
-## Check the Lean proof
-
-From the repository root, using the version pinned in `lean-toolchain`, run
-
-```sh
-lean HarknessPeriod.lean
-```
-
-The theorem `Harkness.conjecture_false` refutes the universal conjecture. The file also gives an explicit congruence for three consecutive 29th powers. The general characterization and the proof connecting the computed primes to the least period are given in [PROOF.md](PROOF.md).
+The daily graph search tests 19 additional candidate inequalities. Run artifacts contain generated witnesses, search reports and verification logs and are retained for 30 days. [Candidate catalog](counterexamples/degree_catalog.json) · [Search code and reproduction guide](counterexamples/) · [GitHub Actions runs](https://github.com/ZzxsA/GPT-Proof/actions/workflows/counterexamples.yml)

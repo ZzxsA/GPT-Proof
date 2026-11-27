@@ -33,12 +33,14 @@ class SourceLanguageTests(unittest.TestCase):
 
         catalog = json.loads((HERE / "catalog.json").read_text(encoding="utf-8"))
         _, witnesses = search.search(catalog, 4, 46)
-        examples = HERE / "examples"
+        proofs = HERE.parent / "proofs"
         generated = {
-            f"Witness_{key}.lean": search.render_lean(witness).encode("utf-8")
+            proofs / f"agf-{witness['rank']}" / f"Witness_{key}.lean":
+                search.render_lean(witness).encode("utf-8")
             for key, witness in witnesses.items()
         }
-        self.assertEqual({p.name: p.read_bytes() for p in examples.glob("*.lean")}, generated)
+        committed = {p: p.read_bytes() for p in proofs.glob("agf-*/Witness_*.lean")}
+        self.assertEqual(committed, generated)
 
     def test_rejects_nonlinear_or_unsupported_sources(self):
         for statement in ("(tree) ⇒ size ≤ order",

@@ -1,3 +1,4 @@
+import Mathlib.Data.Real.Archimedean
 import GraphQuarter
 import Scalar
 import Mathlib.Data.Fintype.BigOperators
@@ -44,11 +45,6 @@ noncomputable def profile {k : ℕ} (a b : ℝ) (u : Vertex k) : ℝ :=
 private theorem sum_ind {T : Type*} [Fintype T] [DecidableEq T] (i : T) :
     ∑ j, indicator i j = 1 := by classical simp [indicator]
 
-private theorem sum_slot_const (k : ℕ) (a : ℝ) :
-    (∑ _ : Slot k, a) = size k*a := by
-  simp [size, Fintype.card_prod, nsmul_eq_mul]
-  <;> ring
-
 private theorem sum_block_ind {k : ℕ} (i : Slot k) :
     ∑ j : Slot k, indicator i.1 j.1 = 3 := by
   rw [Fintype.sum_prod_type]
@@ -62,9 +58,10 @@ private theorem row_block {k : ℕ} (a b : Fin 4) (i : Slot k) :
     ∑ j : Slot k, adjacency (a,i) (b,j) =
       if a=b then (if a=0 then size k-1 else size k-3)
       else if a=0 ∨ b=0 then 1 else 0 := by
+  have dim : ((k:ℝ)+1)*3 = size k := by unfold size; ring
   by_cases h : a=b <;> by_cases h0 : a=0 <;> by_cases h1 : b=0 <;>
-    simp [adjacency, h, h0, h1, Finset.sum_sub_distrib, sum_slot_const,
-      sum_ind, sum_block_ind]
+    simp [adjacency, h, h0, h1, Finset.sum_sub_distrib, dim,
+      sum_ind, sum_block_ind, mul_comm]
 
 /-- Matrix multiplication on a profile constant in each type of layer. -/
 theorem row_profile {k : ℕ} (a b : ℝ) (u : Vertex k) :
@@ -75,9 +72,10 @@ theorem row_profile {k : ℕ} (a b : ℝ) (u : Vertex k) :
   have expand (r : Fin 4) : (∑ j : Slot k, adjacency (s,i) (r,j) * profile a b (r,j)) =
       (if s=r then (if s=0 then size k-1 else size k-3)
        else if s=0 ∨ r=0 then 1 else 0) * (if r=0 then a else b) := by
-    simp only [profile, ← Finset.sum_mul, row_block]
+    change (∑ j : Slot k, adjacency (s,i) (r,j) * (if r=0 then a else b)) = _
+    rw [← Finset.sum_mul, row_block]
   simp only [expand, Fin.sum_univ_four]
-  fin_cases s <;> norm_num [profile] <;> ring
+  fin_cases s <;> simp (config := { decide := true }) [profile] <;> ring
 
 theorem degree_formula {k : ℕ} (u : Vertex k) :
     Clark.degree adjacency u = profile (size k+2) (size k-2) u := by
@@ -174,6 +172,28 @@ theorem gamma_formula (k : ℕ) :
   have h' : size k-1 ≠ 0 := by linarith
   field_simp [h,h']
   <;> ring
+
+/-- Every proposed larger uniform lower bound fails for a member of the
+explicit connected family. -/
+theorem lower_sharp {ε : ℝ} (hε : 0 < ε) :
+    ∃ k : ℕ, (Clark.dispersion (Clark.degree (adjacency (k:=k))) -
+      Clark.dispersion (profile (k:=k) 3 1))/3^2 < -(1:ℝ)/27+ε := by
+  obtain ⟨k,hk⟩ := exists_nat_gt (1/ε)
+  refine ⟨k,?_⟩
+  rw [gamma_formula]
+  have h1 : 1 < (k:ℝ)*ε := (div_lt_iff₀ hε).1 hk
+  have k0 : (0:ℝ) ≤ k := by positivity
+  have h2 : (k:ℝ) ≤ 3*(size k-1)^2 := by
+    unfold size
+    nlinarith [sq_nonneg (k:ℝ)]
+  have h3 := mul_le_mul_of_nonneg_right h2 hε.le
+  have hpos : 0 < 3*(size k-1)^2 := by
+    have ht : 0 < size k-1 := by unfold size; linarith
+    positivity
+  have hi : 1/(3*(size k-1)^2) < ε := (div_lt_iff₀ hpos).2 (by nlinarith)
+  linarith
+
+#print axioms lower_sharp
 
 #print axioms connected_walk
 #print axioms simple_undirected

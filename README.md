@@ -23,11 +23,22 @@ For the two Conjecture 3 entries, an admissible sum uses terms of the form $k^a+
 
 ## Proved conjectures
 
+| Conjecture | Result | Formal proof |
+|---|---|---|
+| [Gregory J. Clark · graph dispersion, Conjecture 4.4](proofs/clark-dispersion/) | The star maximizes the normalized dispersion difference at each fixed order. The infimum over all connected simple graphs is $-1/27$ and the supremum is $1/4$. | [Graph upper bound](proofs/clark-dispersion/SimpleGraphBound.lean) · [Star](proofs/clark-dispersion/Star.lean) · [Sharp lower bound](proofs/clark-dispersion/LowerFamily.lean) |
+| [Andres Cicuttin · Farey alignment, A363321](proofs/cicuttin-farey/) | Among the reduced fractions of order $n$, the fraction that agree with the equally spaced grid at the same position tends to zero. | [Lean theorem](proofs/cicuttin-farey/FareyAlignment.lean) |
+| [Peter Bala · power-series congruences, A361281 and A293013](proofs/bala-congruences/) | For all integral series $F,G$ with $G(0)=1$, the integers $b_n=n![x^n]F(x)\exp(xG(x)^n)$ satisfy $b_{n+k}\equiv b_n\pmod{k}$. | [Coefficient theorem](proofs/bala-congruences/BalaExp.lean) |
+| [Clark Kimberling · shifted golden-ratio series, A289245](proofs/kimberling-a289245/) | After the change in the floor sequence, each coefficient is at least twice the preceding one throughout $5/2\le r<8/3$. | [Lean theorem](proofs/kimberling-a289245/ShiftedFloor.lean) |
+
 [Clark Kimberling · strict increase of reciprocal floor-series coefficients](proofs/kimberling-a078140/). Among $1\le r<2$, the coefficients of the reciprocal of $\sum_{n\ge0}(-1)^n\lfloor(n+1)r\rfloor x^n$ are strictly increasing exactly for $3/2\le r<5/3$. This includes the golden ratio and the separate OEIS A289261 conjecture at $r=13/8$. [Real-parameter theorem](proofs/kimberling-a078140/KimberlingReal.lean) · [Independent proof for 13/8](proofs/kimberling-a289261/)
 
 [Sun · OEIS A362861, Conjecture 1(i)](proofs/sun-a362861-1i/) asks which positive even integers are sums of distinct values of the form $b^i+b^j$. For $b=5$, exactly the 14 listed indices fail. For $b=3$, every positive even integer has a representation. [Base five](proofs/sun-a362861-1i/FiveCharacterization.lean) · [Base three](proofs/sun-a362861-1i/Ternary.lean)
 
 [Sun · OEIS A362861, Conjecture 1(ii), first assertion](proofs/sun-a362861-1ii/) asks about distinct summands of the form $3^a+7^b$. Every positive even integer has a representation, already with $b\le 1$. More generally, the unordered pairs of odd bases greater than one that cover every positive even integer are exactly $(3,3),(3,5),(3,7)$. [Lean classification](proofs/sun-a362861-1ii/Classification.lean)
+
+## Partial results on open conjectures
+
+[Shu Liu · Conjecture 2, odd-field self-orthogonal MDS codes](proofs/liu-odd-self-orthogonal-mds/). The proposed nonexistence holds over every odd prime field and over $\mathbb F_9$. Lean rules out extended generalized Reed–Solomon generators at the stated dimension over all odd finite fields. The field-specific conclusion also uses published arc-classification theorems. [Lean obstruction](proofs/liu-odd-self-orthogonal-mds/OddGRS.lean) · [Independent calculation over seven elements](proofs/liu-odd-self-orthogonal-mds/LiuSeven.lean)
 
 ## Corrections to published statements
 

@@ -39,3 +39,6 @@ jobs:
         run: |
           lean proofs/knor-geodesics-14/Geodesics.lean
           lean proofs/knor-geodesics-14/LayerFamily.lean
+      - name: Verify the distinct sums of powers of three
+        if: ${{ !cancelled() }}
+        run: lean proofs/sun-a362861-1i/Ternary.lean

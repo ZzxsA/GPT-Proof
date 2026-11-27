@@ -26,7 +26,7 @@ def main():
     upper = 2087
     for a in range(5, 20):
         assert half_term(a, 0) <= upper - 256 + 1
-        for j in range(4):
+        for j in range(5):
             coin = half_term(a, j)
             assert coin <= upper - 256 + 1
             upper += coin

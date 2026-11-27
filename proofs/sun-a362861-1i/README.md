@@ -31,7 +31,8 @@ From this folder, using the Lean version pinned in the repository root, run
 python3 verify_seed.py
 export LEAN_PATH="$(mktemp -d)"
 lean Ternary.lean
-lean -o "$LEAN_PATH/SeedFive.olean" SeedFive.lean
+ulimit -s 262144
+lean -s 262144 -o "$LEAN_PATH/SeedFive.olean" SeedFive.lean
 lean -o "$LEAN_PATH/FiveCoverage.olean" FiveCoverage.lean
 lean FiveCharacterization.lean
 ```

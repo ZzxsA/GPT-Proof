@@ -89,9 +89,14 @@ theorem seed_exact (n : Nat) (hn : n ≤ 2087) :
   rw [← reachable_iff, ← marked_iff]
   have key := congrArg (fun v : Nat => v.testBit n) certificate
   have hlt : n < 2088 := by omega
+  have mask : (2^2088-1 : Nat).testBit n = true := by
+    rw [Nat.testBit_two_pow_sub_one]
+    exact decide_eq_true hlt
+  change ((reachableBits seedCoins &&& (2^2088-1)).testBit n) =
+    (((2^2088-1) ^^^ marked holes).testBit n) at key
+  rw [Nat.testBit_and, Nat.testBit_xor, mask] at key
   cases haveCoin : (reachableBits seedCoins).testBit n <;>
     cases isHole : (marked holes).testBit n <;>
-    simp [Nat.testBit_and, Nat.testBit_xor, Nat.testBit_two_pow_sub_one,
-      hlt, haveCoin, isHole] at key ⊢
+    simp [haveCoin, isHole] at key ⊢
 
 end SunFive

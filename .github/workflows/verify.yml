@@ -147,3 +147,103 @@ jobs:
             lean KimberlingReal.lean
             python3 verify_golden_limit.py
           '
+
+  additional-proofs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the pinned Lean and mathlib versions
+        run: |
+          sudo apt-get -o Dir::Etc::sourcelist=sources.list.d/ubuntu.sources -o Dir::Etc::sourceparts=- update -qq
+          sudo apt-get install --yes elan
+          elan toolchain install "$(cat lean-toolchain)"
+          git clone -q --depth 1 --branch v4.19.0 https://github.com/leanprover-community/mathlib4 "$RUNNER_TEMP/research-mathlib"
+          cd "$RUNNER_TEMP/research-mathlib"
+          test "$(git rev-parse HEAD)" = c44e0c8ee63ca166450922a373c7409c5d26b00b
+          mapfile -t imports < <(awk '$1 == "import" && $2 ~ /^Mathlib/ {gsub(/\./, "/", $2); print $2 ".lean"}' "$GITHUB_WORKSPACE"/proofs/clark-dispersion/*.lean "$GITHUB_WORKSPACE"/proofs/liu-odd-self-orthogonal-mds/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289261/*.lean "$GITHUB_WORKSPACE"/proofs/kimberling-a289245/*.lean "$GITHUB_WORKSPACE"/proofs/bala-congruences/*.lean "$GITHUB_WORKSPACE"/proofs/cicuttin-farey/*.lean | sort -u)
+          lake exe cache get "${imports[@]}"
+          mkdir -p "$RUNNER_TEMP/proof-olean"
+      - name: Verify clark-dispersion
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/clark-dispersion"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/GraphQuarter.olean" "$folder/GraphQuarter.lean" || status=1
+            lean --root="$folder" -o "$compiled/Scalar.olean" "$folder/Scalar.lean" || status=1
+            lean --root="$folder" -o "$compiled/Moments.olean" "$folder/Moments.lean" || status=1
+            lean --root="$folder" -o "$compiled/LowerFamily.olean" "$folder/LowerFamily.lean" || status=1
+            lean --root="$folder" -o "$compiled/Star.olean" "$folder/Star.lean" || status=1
+            lean --root="$folder" -o "$compiled/SimpleGraphBound.olean" "$folder/SimpleGraphBound.lean" || status=1
+            exit "$status"
+          '
+      - name: Verify liu-odd-self-orthogonal-mds
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/liu-odd-self-orthogonal-mds"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/LiuSeven.olean" "$folder/LiuSeven.lean" || status=1
+            lean --root="$folder" -o "$compiled/OddGRS.olean" "$folder/OddGRS.lean" || status=1
+            python3 "$folder/verify_seven.py" || status=1
+            exit "$status"
+          '
+      - name: Verify kimberling-a289261
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/kimberling-a289261"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/Kimberling.olean" "$folder/Kimberling.lean" || status=1
+            exit "$status"
+          '
+      - name: Verify kimberling-a289245
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/kimberling-a289245"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/ShiftedFloor.olean" "$folder/ShiftedFloor.lean" || status=1
+            python3 "$folder/verify_shifted.py" || status=1
+            exit "$status"
+          '
+      - name: Verify bala-congruences
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/bala-congruences"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/Bala.olean" "$folder/Bala.lean" || status=1
+            lean --root="$folder" -o "$compiled/BalaSeries.olean" "$folder/BalaSeries.lean" || status=1
+            lean --root="$folder" -o "$compiled/BalaExp.olean" "$folder/BalaExp.lean" || status=1
+            python3 "$folder/verify_bala.py" || status=1
+            exit "$status"
+          '
+      - name: Verify cicuttin-farey
+        if: ${{ !cancelled() }}
+        run: |
+          cd "$RUNNER_TEMP/research-mathlib"
+          lake env bash -eu -c '
+            folder="$GITHUB_WORKSPACE/proofs/cicuttin-farey"
+            compiled="$RUNNER_TEMP/proof-olean"
+            export LEAN_PATH="$compiled:$LEAN_PATH"
+            status=0
+            lean --root="$folder" -o "$compiled/FareyAlignment.olean" "$folder/FareyAlignment.lean" || status=1
+            python3 "$folder/verify_farey.py" || status=1
+            exit "$status"
+          '

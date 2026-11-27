@@ -166,6 +166,7 @@ theorem normalized_five_exact (n : Nat) : HalfRep n ↔ n ∉ holes := by
       have ha : a < 5 := by
         by_cases large : 5 ≤ a
         · have hp : 3125 ≤ 5^a := Nat.pow_le_pow_of_le (a := 5) (n := 5) (by decide) large
+          have sumLB : 3125 ≤ 5^a + 5^j := Nat.le_trans hp (Nat.le_add_right _ _)
           unfold halfTerm at val
           omega
         · omega

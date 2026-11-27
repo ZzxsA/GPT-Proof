@@ -16,9 +16,9 @@ This is an analytic proof with an exact rational certificate. The Lean files in 
 ## A direct proof of convergence
 
 One can prove convergence on the full interval without subdividing the parameters. Use the comparison series $D^*$ and $E=D^*-(1+x)G$ from the [strict-increase proof](README.md), and put $H=1/D^*$. We have
-$
+$$
  H(x)=\frac{1+x/(1-x-x^2)}{1-x-x^3}.
-$
+$$
 Its coefficients are positive; it is analytic on $|x|<s=(\sqrt5-1)/2$ and tends to infinity as $x$ increases to $s$. Indeed the second denominator is positive through $s$, since $1-s-s^3=s^2(1-s)>0$. The coefficients of $E$ are nonnegative and bounded. When $r<8/5$ the degree-four coefficient of $E$ is 1, and when $r\ge8/5$ its degree-nine coefficient is 1. These follow by evaluating the pairs of floors at $4r,5r$ and $9r,10r$, respectively.
 
 It follows that $F=EH$ has zero constant term and positive coefficients in every degree from its first nonzero coefficient onward. On $[0,s)$ it increases strictly from zero to infinity. Let $R$ be the unique positive solution to $F(R)=1$. Inside $|z|<R$, $|F(z)|<1$. On the boundary, $F(z)=1$ forces equality in the triangle inequality for the absolutely convergent sum, so all nonzero summands have positive real phase. Consecutive positive coefficients then force $z=R$. Also $F'(R)>0$.

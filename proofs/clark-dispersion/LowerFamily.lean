@@ -115,6 +115,48 @@ private theorem profile_disp {k : ℕ} (a b : ℝ) :
   · field_simp
     <;> ring
 
+/-- Every entry is 0 or 1, the diagonal is zero, and the adjacency matrix is
+symmetric. -/
+theorem simple_undirected {k : ℕ} (u v : Vertex k) :
+    (adjacency u v = 0 ∨ adjacency u v = 1) ∧
+    adjacency u u = 0 ∧ adjacency u v = adjacency v u := by
+  obtain ⟨s,i⟩ := u
+  obtain ⟨r,j⟩ := v
+  have diag : adjacency (s,i) (s,i) = 0 := by by_cases h : s=0 <;> simp [adjacency,indicator,h]
+  refine ⟨?_,diag,?_⟩
+  · unfold adjacency indicator
+    split_ifs <;> norm_num
+  · by_cases hs : s=r
+    · subst r
+      by_cases h : s=0 <;> simp [adjacency, indicator, h, eq_comm]
+    · simp [adjacency, indicator, hs, Ne.symm hs, or_comm, eq_comm]
+
+/-- Walk through the high-layer vertices in the two prescribed slots.
+Repeated successive vertices can be omitted. -/
+theorem connected_walk {k : ℕ} (u v : Vertex k) :
+    ∃ a b : Vertex k, (u=a ∨ adjacency u a=1) ∧
+      (a=b ∨ adjacency a b=1) ∧ (b=v ∨ adjacency b v=1) := by
+  obtain ⟨s,i⟩ := u
+  obtain ⟨r,j⟩ := v
+  refine ⟨(0,i),(0,j),?_,?_,?_⟩
+  · by_cases e : s=0
+    · subst s; exact Or.inl rfl
+    · right; simp [adjacency,indicator,e]
+  · by_cases e : i=j
+    · subst j; exact Or.inl rfl
+    · right; simp [adjacency,indicator,e,Ne.symm e]
+  · by_cases e : r=0
+    · subst r; exact Or.inl rfl
+    · right; simp [adjacency,indicator,e,Ne.symm e]
+
+/-- The normed Perron vector has both extreme entries. -/
+theorem profile_range (k : ℕ) :
+    (∀ i : Vertex k, 1 ≤ profile 3 1 i ∧ profile 3 1 i ≤ 3) ∧
+    (∃ i : Vertex k, profile 3 1 i = 1) ∧ (∃ i : Vertex k, profile 3 1 i = 3) := by
+  refine ⟨?_, ⟨(1,0,0),by norm_num [profile]⟩, ⟨(0,0,0),by norm_num [profile]⟩⟩
+  intro i
+  by_cases h : i.1=0 <;> norm_num [profile,h]
+
 /-- The increasingly dense family has a fixed principal ratio of 3 and
 attains values arbitrarily close to the bound -1/27. -/
 theorem gamma_formula (k : ℕ) :
@@ -133,6 +175,9 @@ theorem gamma_formula (k : ℕ) :
   field_simp [h,h']
   <;> ring
 
+#print axioms connected_walk
+#print axioms simple_undirected
+#print axioms profile_range
 #print axioms eigen_formula
 #print axioms gamma_formula
 

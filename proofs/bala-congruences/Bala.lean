@@ -46,7 +46,8 @@ theorem kernel_shift (n k j i : ℕ) (hi : i ≤ j) :
     obtain ⟨t, ht⟩ := (Nat.factorial_dvd_factorial hi).trans (Nat.factorial_dvd_descFactorial n j)
     simpa only [ht, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hc.mul_left t
   · rw [Nat.descFactorial_of_lt (by omega : n < j)]
-    simp
+    simp only [Nat.zero_mul]
+    rfl
 
 /-- The integer array c(j,i) represents [x^j] F(x)(G(x)-1)^i. -/
 def inner (c : ℕ → ℕ → ℤ) (n j : ℕ) : ℤ :=
@@ -65,7 +66,7 @@ private theorem inner_shift (c : ℕ → ℕ → ℤ) (n k j : ℕ) :
     inner c (n+k) j ≡ inner c n j [ZMOD k] := by
   apply sum_congr_mod
   intro i hi
-  have hij : i ≤ j := by simpa using Finset.mem_range.mp hi
+  have hij : i ≤ j := Nat.le_of_lt_succ (Finset.mem_range.mp hi)
   exact (Int.natCast_modEq_iff.mpr (kernel_shift n k j i hij)).mul_left (c j i)
 
 private theorem inner_zero (c : ℕ → ℕ → ℤ) {n j : ℕ} (h : n < j) : inner c n j = 0 := by

@@ -101,7 +101,7 @@ theorem spectral_coupling (A : V → V → ℝ) (x : V → ℝ) {ρ : ℝ}
   have hs : Real.sqrt (1+dispersion d) ≤ ρ / mean d := by
     exact (Real.sqrt_le_iff).2 ⟨(div_pos hρ hd).le, hrms⟩
   have hs1 : 1 ≤ Real.sqrt (1+dispersion d) := by
-    have h := Real.sqrt_le_sqrt (a := 1) (b := 1+dispersion d) (by linarith [dispersion_nonneg d])
+    have h := Real.sqrt_le_sqrt (show (1:ℝ) ≤ 1+dispersion d by linarith [dispersion_nonneg d])
     simpa using h
   have hcov := mean_pair_sq (fun i => d i - mean d) (fun i => x i - mean x)
   rw [covariance_eq, ← hdvar, ← hxvar] at hcov
@@ -109,7 +109,7 @@ theorem spectral_coupling (A : V → V → ℝ) (x : V → ℝ) {ρ : ℝ}
   rw [hp] at hcov
   have hprod : 0 < (mean d * mean x)^2 := by positivity
   have ratio : ρ / mean d - 1 = (ρ*mean x - mean d*mean x)/(mean d*mean x) := by
-    field_simp [hd.ne', hm.ne']
+    field_simp [hd.ne', hm.ne'] <;> ring
   calc
     _ ≤ (ρ / mean d - 1)^2 := by
       exact pow_le_pow_left₀ (by linarith) (by linarith) 2

@@ -171,10 +171,12 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/clark-dispersion"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/GraphQuarter.olean" "$folder/GraphQuarter.lean"
-            lean --root="$folder" -o "$compiled/Scalar.olean" "$folder/Scalar.lean"
-            lean --root="$folder" -o "$compiled/Moments.olean" "$folder/Moments.lean"
-            lean --root="$folder" -o "$compiled/LowerFamily.olean" "$folder/LowerFamily.lean"
+            status=0
+            lean --root="$folder" -o "$compiled/GraphQuarter.olean" "$folder/GraphQuarter.lean" || status=1
+            lean --root="$folder" -o "$compiled/Scalar.olean" "$folder/Scalar.lean" || status=1
+            lean --root="$folder" -o "$compiled/Moments.olean" "$folder/Moments.lean" || status=1
+            lean --root="$folder" -o "$compiled/LowerFamily.olean" "$folder/LowerFamily.lean" || status=1
+            exit "$status"
           '
       - name: Verify liu-odd-self-orthogonal-mds
         if: ${{ !cancelled() }}
@@ -184,8 +186,11 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/liu-odd-self-orthogonal-mds"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/LiuSeven.olean" "$folder/LiuSeven.lean"
-            lean --root="$folder" -o "$compiled/OddGRS.olean" "$folder/OddGRS.lean"
+            status=0
+            lean --root="$folder" -o "$compiled/LiuSeven.olean" "$folder/LiuSeven.lean" || status=1
+            lean --root="$folder" -o "$compiled/OddGRS.olean" "$folder/OddGRS.lean" || status=1
+            python3 "$folder/verify_seven.py" || status=1
+            exit "$status"
           '
       - name: Verify kimberling-a289261
         if: ${{ !cancelled() }}
@@ -195,7 +200,9 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/kimberling-a289261"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/Kimberling.olean" "$folder/Kimberling.lean"
+            status=0
+            lean --root="$folder" -o "$compiled/Kimberling.olean" "$folder/Kimberling.lean" || status=1
+            exit "$status"
           '
       - name: Verify kimberling-a289245
         if: ${{ !cancelled() }}
@@ -205,8 +212,10 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/kimberling-a289245"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/ShiftedFloor.olean" "$folder/ShiftedFloor.lean"
-            python3 "$folder/verify_shifted.py"
+            status=0
+            lean --root="$folder" -o "$compiled/ShiftedFloor.olean" "$folder/ShiftedFloor.lean" || status=1
+            python3 "$folder/verify_shifted.py" || status=1
+            exit "$status"
           '
       - name: Verify bala-congruences
         if: ${{ !cancelled() }}
@@ -216,8 +225,11 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/bala-congruences"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/Bala.olean" "$folder/Bala.lean"
-            lean --root="$folder" -o "$compiled/BalaSeries.olean" "$folder/BalaSeries.lean"
+            status=0
+            lean --root="$folder" -o "$compiled/Bala.olean" "$folder/Bala.lean" || status=1
+            lean --root="$folder" -o "$compiled/BalaSeries.olean" "$folder/BalaSeries.lean" || status=1
+            lean --root="$folder" -o "$compiled/BalaExp.olean" "$folder/BalaExp.lean" || status=1
+            exit "$status"
           '
       - name: Verify cicuttin-farey
         if: ${{ !cancelled() }}
@@ -227,5 +239,8 @@ jobs:
             folder="$GITHUB_WORKSPACE/proofs/cicuttin-farey"
             compiled="$RUNNER_TEMP/proof-olean"
             export LEAN_PATH="$compiled:$LEAN_PATH"
-            lean --root="$folder" -o "$compiled/FareyAlignment.olean" "$folder/FareyAlignment.lean"
+            status=0
+            lean --root="$folder" -o "$compiled/FareyAlignment.olean" "$folder/FareyAlignment.lean" || status=1
+            python3 "$folder/verify_farey.py" || status=1
+            exit "$status"
           '

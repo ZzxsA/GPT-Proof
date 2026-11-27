@@ -50,7 +50,7 @@ theorem no_monic_square_values (two : (2 : K) ≠ 0) (b c : K) :
     ¬ ∀ x : K, ∃ y : K, y ≠ 0 ∧ y^2 = x^2 + b*x + c := by
   intro h
   let hlf := b / 2
-  have hhlf : (2 : K) * hlf = b := by dsimp [hlf]; field_simp
+  have hhlf : (2 : K) * hlf = b := by dsimp [hlf]; field_simp [two]
   apply no_square_shift two (c - hlf^2)
   intro x
   obtain ⟨y,hy,hval⟩ := h (x - hlf)
@@ -130,8 +130,46 @@ theorem no_grs_weights (n : ℕ) (hq : Fintype.card K = n+3) (two : (2 : K) ≠ 
   intro x
   refine ⟨s x / e, div_ne_zero (hs x) he, ?_⟩
   rw [div_pow,eqn x]
-  field_simp
-  <;> ring
+  field_simp [he]
+  ring
+
+/-- Euclidean inner product of rows i,j for the extended GRS generator.
+There is one column for each affine evaluation parameter and one at infinity. -/
+def gramEntry (s : K → K) (e : K) (r i j : ℕ) : K :=
+  (∑ t : K, (s t * t^i) * (s t * t^j)) +
+    if i = r ∧ j = r then e^2 else 0
+
+private theorem gramEntry_eq (s : K → K) (e : K) (r i j : ℕ) :
+    gramEntry s e r i j = moment (fun t => (s t)^2) (i+j) +
+      (if i = r ∧ j = r then e^2 else 0) := by
+  unfold gramEntry moment
+  apply congrArg (fun z : K => z + _)
+  apply sum_congr rfl
+  intro t ht
+  rw [pow_add]
+  ring
+
+/-- There is no choice of nonzero column scaling which makes the standard
+extended GRS generator Euclidean self-orthogonal. It has r+1 rows and
+q+1 columns, where q = 2*r+3. -/
+theorem no_extended_grs_self_orthogonal (r : ℕ) (hq : Fintype.card K = 2*r+3)
+    (two : (2 : K) ≠ 0) (s : K → K) (e : K) (hs : ∀ x, s x ≠ 0) (he : e ≠ 0) :
+    ¬ ∀ i ≤ r, ∀ j ≤ r, gramEntry s e r i j = 0 := by
+  intro h
+  apply no_grs_weights (2*r) hq two s e hs he
+  · intro d hd
+    let i := min r d
+    let j := d-i
+    have hi : i ≤ r := Nat.min_le_left _ _
+    have hj : j ≤ r := by dsimp [j,i]; omega
+    have hij : i+j = d := by dsimp [j,i]; omega
+    have hn : ¬ (i = r ∧ j = r) := by omega
+    have gg := h i hi j hj
+    simpa [gramEntry_eq,hn,hij] using gg
+  · have gg := h r (le_refl _) r (le_refl _)
+    simpa [gramEntry_eq,two_mul] using gg
+
+#print axioms no_extended_grs_self_orthogonal
 
 #print axioms no_grs_weights
 end LiuOdd

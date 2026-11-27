@@ -42,3 +42,17 @@ jobs:
       - name: Verify the distinct sums of powers of three
         if: ${{ !cancelled() }}
         run: lean proofs/sun-a362861-1i/Ternary.lean
+      - name: Verify the finite subset sums for base five
+        if: ${{ !cancelled() }}
+        working-directory: proofs/sun-a362861-1i
+        run: |
+          python3 verify_seed.py
+          mkdir -p "$RUNNER_TEMP/distinct-sums"
+          lean -o "$RUNNER_TEMP/distinct-sums/SeedFive.olean" SeedFive.lean
+      - name: Verify the complete classification for base five
+        if: ${{ !cancelled() }}
+        working-directory: proofs/sun-a362861-1i
+        run: |
+          export LEAN_PATH="$RUNNER_TEMP/distinct-sums"
+          lean -o "$LEAN_PATH/FiveCoverage.olean" FiveCoverage.lean
+          lean FiveCharacterization.lean

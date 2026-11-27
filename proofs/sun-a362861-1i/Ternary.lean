@@ -35,6 +35,7 @@ private theorem nodup_triples {xs : List Nat} (h : xs.Nodup) : (triples xs).Nodu
     refine ⟨?_, ih hxs⟩
     intro hm
     obtain ⟨y, hy, he⟩ := List.mem_map.mp hm
+    change 3*y = 3*x at he
     have eq : y = x := by omega
     exact hx (eq ▸ hy)
 

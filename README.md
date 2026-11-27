@@ -4,7 +4,7 @@
 
 ## Proof index
 
-Each entry links to the original conjecture, an explicit counterexample and instructions for checking the proof. For the Harkness sequence, $a(n)$ is the least positive period. For graphs, θ is the fewest cliques needed to cover all vertices and b is the fewest rounds needed to burn the graph.
+The table collects counterexamples. The sections below it also index proved conjectures and constructive answers. For the Harkness sequence, $a(n)$ is the least positive period. For graphs, θ is the fewest cliques needed to cover all vertices and b is the fewest rounds needed to burn the graph.
 
 | Conjecture | Claim | Counterexample | Lean |
 |---|---|---|---|
@@ -17,7 +17,11 @@ Each entry links to the original conjecture, an explicit counterexample and inst
 
 The Harkness folder also contains the proof of the general period theorem and two independent computations of the exact period. [Mathematical proof](proofs/harkness-period/PROOF.md)
 
-For Sun's two conjectures, an admissible sum uses terms of the form $k^a+m^b$ with nonnegative exponents and no summand dividing another. [Common obstruction](proofs/shared/sun-antichain/PROOF.md)
+For the two Conjecture 3 entries, an admissible sum uses terms of the form $k^a+m^b$ with nonnegative exponents and no summand dividing another. [Common obstruction](proofs/shared/sun-antichain/PROOF.md)
+
+## Proved conjectures
+
+[Sun · OEIS A362861, Conjecture 1(i)](proofs/sun-a362861-1i/) asks which positive even integers are sums of distinct values of the form $b^i+b^j$. For $b=5$, exactly the 14 listed indices fail. For $b=3$, every positive even integer has a representation. [Base five](proofs/sun-a362861-1i/FiveCharacterization.lean) · [Base three](proofs/sun-a362861-1i/Ternary.lean)
 
 ## Open problems with a constructive answer
 

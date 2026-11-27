@@ -23,7 +23,7 @@ private theorem order_le_steps (n : ℕ) : n ≤ steps n := by
   induction n with
   | zero => omega
   | succ n ih =>
-    have hp := Nat.totient_pos.mpr (Nat.succ_pos n)
+    have hp : 0 < (n+1).totient := Nat.totient_pos.mpr (by omega)
     unfold steps at *
     rw [sum_range_succ]
     omega
@@ -42,12 +42,15 @@ private theorem count_le (n : ℕ) (hn : 0 < n) :
     split_ifs with h
     · exact (card_filter_le _ _).trans (by simpa using (Nat.le_of_lt_succ (mem_range.mp hd)))
     · have he : ((range d).filter (fun a => d.Coprime a ∧ a * steps n = rank n a d * d)) = ∅ := by
-        apply eq_empty_iff_forall_notMem.mpr
-        intro a ha
-        obtain ⟨_, hc, heq⟩ := mem_filter.mp ha
-        apply h
-        apply hc.dvd_of_dvd_mul_left
-        exact ⟨rank n a d, by simpa [M, Nat.mul_comm] using heq⟩
+        ext a
+        constructor
+        · intro ha
+          exfalso
+          obtain ⟨_, hc, heq⟩ := mem_filter.mp ha
+          apply h
+          apply hc.dvd_of_dvd_mul_left
+          exact ⟨rank n a d, by simpa [M, Nat.mul_comm] using heq⟩
+        · simp
       simp [he]
   unfold count
   apply Nat.add_le_add_left
@@ -101,7 +104,7 @@ private theorem divisor_fourth (m : ℕ) : m.divisors.card^4 ≤ C*m := by
   have hfac : (∏ p ∈ P, p ^ m.factorization p) = m := Nat.factorization_prod_pow_eq_self hm
   calc
     m.divisors.card^4 = ∏ p ∈ P, (m.factorization p+1)^4 := by
-      rw [Nat.card_divisors hm, prod_pow]; rfl
+      rw [Nat.card_divisors hm, prod_pow]
     _ ≤ ∏ p ∈ P, factor p * p^(m.factorization p) := prod_le_prod' hpp
     _ = (P.prod factor) * m := by rw [prod_mul_distrib, hfac]
     _ ≤ C*m := Nat.mul_le_mul_right _ hconst

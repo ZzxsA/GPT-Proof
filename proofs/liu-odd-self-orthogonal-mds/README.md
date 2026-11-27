@@ -39,7 +39,7 @@ The finite certificate finds exactly one such arc, with $f(x)=x^{-1}$. Let $w_x$
 
 ## Verification
 
-* `OddGRS.lean` proves `LiuOdd.no_grs_weights` for every finite field of odd characteristic satisfying the stated cardinality and moment equations. The connection between those equations and a generator, and the application of the published arc classification, are given above.
+* `OddGRS.lean` proves `LiuOdd.no_extended_grs_self_orthogonal` directly for the Gram entries of the full-length extended GRS generator over every odd finite field. Its intermediate theorem `LiuOdd.no_grs_weights` proves the finite-field moment obstruction. The application of the published arc classification to general codes in the prime and order-nine cases is given above.
 * `LiuSeven.lean` checks the normalized case independently in Lean's standard library, including every allowed permutation and every possible choice of square multipliers. The finite normalization is justified above.
 * `verify_seven.py` independently enumerates all 120 normalized permutations, all admissible diagonal scalings, and checks the corresponding complete Gram matrices.
 

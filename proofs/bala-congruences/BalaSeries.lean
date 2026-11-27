@@ -6,7 +6,7 @@ import Mathlib.Data.Nat.Choose.Sum
 namespace Bala
 open PowerSeries Finset
 
-def coeffArray (F G : PowerSeries ℤ) (j i : ℕ) : ℤ :=
+noncomputable def coeffArray (F G : PowerSeries ℤ) (j i : ℕ) : ℤ :=
   coeff ℤ j (F * (G - 1)^i)
 
 private theorem array_zero (F G : PowerSeries ℤ) (hG : constantCoeff ℤ G = 1)
@@ -45,7 +45,7 @@ private theorem series_binomial_cut (F G : PowerSeries ℤ) (hG : constantCoeff 
 
 /-- Integral form of n! [x^n] F(x) exp(x G(x)^n), obtained by expanding
 the exponential and reindexing its summand with j = n-s. -/
-def scaledCoefficient (F G : PowerSeries ℤ) (n : ℕ) : ℤ :=
+noncomputable def scaledCoefficient (F G : PowerSeries ℤ) (n : ℕ) : ℤ :=
   ∑ j ∈ range (n+1), (n.descFactorial j : ℤ) * coeff ℤ j (F * G^(n*(n-j)))
 
 theorem scaled_eq_diagonal (F G : PowerSeries ℤ) (hG : constantCoeff ℤ G = 1) (n : ℕ) :

@@ -8,7 +8,7 @@ open PowerSeries Finset
 
 /-- Coefficient definition of F*exp(B) over the rationals for integral F,B
 and B(0)=0. The s-th term has order at least s. -/
-def weightedExp (F B : PowerSeries ℤ) : PowerSeries ℚ :=
+noncomputable def weightedExp (F B : PowerSeries ℤ) : PowerSeries ℚ :=
   PowerSeries.mk fun n => ∑ s ∈ range (n+1), (coeff ℤ n (F * B^s) : ℚ) / (s.factorial : ℚ)
 
 theorem factorial_coeff_exp (F G : PowerSeries ℤ) (n : ℕ) :
